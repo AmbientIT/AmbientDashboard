@@ -8,6 +8,9 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
     root: `${process.cwd()}/src/client`,
     extensions: ['', '.jsx', '.js', '.json'],
     modulesDirectories: ['node_modules'],
+    alias: {
+      styles: `${process.cwd()}/src/client/styles`,
+    },
   },
   module: {
     preLoaders: [

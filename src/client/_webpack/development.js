@@ -15,7 +15,6 @@ module.exports = {
       'webpack/hot/only-dev-server',
       `${process.cwd()}/src/client/index.jsx`,
     ],
-    graphiql: `${process.cwd()}/src/client/graphiql.jsx`,
   },
   output: {
     path: `${process.cwd()}/src/public`,
