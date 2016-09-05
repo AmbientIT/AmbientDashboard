@@ -2,5 +2,13 @@
   "parser": "babel-eslint",
   "extends": [
     "standard"
-  ]
+  ],
+  "plugins": [
+    "require-in-package"
+  ],
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "require-in-package/require-in-package": 2,
+    "space-before-function-paren": 0,
+  }
 }

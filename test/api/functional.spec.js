@@ -11,7 +11,7 @@ describe('awesome API', function () {
       await request.get('/api/functional')
         .expect(200, {
           data: 'What is the universe? The answer is 42.',
-          testing: true
+          testing: true,
         })
     })
   })

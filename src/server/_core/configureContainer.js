@@ -5,10 +5,7 @@ import { createContainer, Lifetime } from 'awilix'
  * will be loaded.
  */
 const modulesToLoad = [
-  // Services should be scoped to the request.
-  // This means that each request gets a separate instance
-  // of a service.
-  ['services/*.js', Lifetime.SCOPED]
+  ['services/*.js', Lifetime.SCOPED],
 ]
 
 /**
@@ -16,13 +13,13 @@ const modulesToLoad = [
  *
  * @return {Object} The container.
  */
-export default function getConfiguredContainer () {
+export const getConfiguredContainer = () => {
   const container = createContainer()
   container.loadModules(
     modulesToLoad,
     {
       cwd: `${__dirname}/..`,
-      formatName: 'camelCase'
+      formatName: 'camelCase',
     }
   )
   return container

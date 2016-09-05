@@ -1,7 +1,12 @@
 {
-  "presets": ["es2015-node6", "stage-1"],
-  "sourceMaps": "both",
-  "plugins": ["transform-runtime"],
+	"passPerPreset": true,
+	"presets": [
+		{ "plugins": [ "transform-runtime" ] },
+		{
+			"passPerPreset": false,
+			"presets": [ "es2015-node6", "stage-1" ]
+		}
+	],
   "env": {
     "test": {
       "plugins": [
@@ -11,5 +16,10 @@
     "production": {
       "plugins": ["source-map-support"]
     }
-  }
+  },
+  "ignore": [
+    "src/client/*",
+    "src/public/*"
+  ],
+  "sourceMaps": "both"
 }

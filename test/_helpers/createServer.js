@@ -7,9 +7,9 @@
 import agent from 'supertest'
 import http from 'http'
 import memoize from 'lodash/memoize'
-import env from 'lib/env'
+import env from '../../src/server/_core/env'
 
-import createServer from 'lib/createServer'
+import createServer from '../../src/server'
 
 let _app, _server
 const createTestServer = memoize(async () => {
@@ -42,4 +42,3 @@ after((done) => {
 })
 
 export default createTestServer
-

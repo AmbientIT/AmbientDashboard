@@ -12,7 +12,7 @@ describe('classes API', function () {
         200,
         [{
           id: 3,
-          name: 'Dependency Injection with Awilix'
+          name: 'Dependency Injection with Awilix',
         }]
       )
     })
