@@ -83,6 +83,7 @@
     "isomorphic-style-loader": "^1.0.0",
     "json-loader": "^0.5.4",
     "koa-connect": "^1.0.0",
+    "koa-webpack-dev-middleware": "^1.2.2",
     "koa-webpack-hot-middleware": "^1.0.3",
     "mocha": "^3.0.2",
     "nodemon": "^1.10.2",
