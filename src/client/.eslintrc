@@ -2,7 +2,11 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true,
+  },
+  "globals": {
+    "GRAPHQL": true,
   },
   "rules": {
     "semi": ["error", "never"],
@@ -14,5 +18,6 @@
     "max-len": ["error", 160],
     "no-confusing-arrow": 0,
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "import/prefer-default-export": 0,
   }
 }

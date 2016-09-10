@@ -1,0 +1,83 @@
+html,
+body,
+main,
+.app {
+  height: 100%;
+  width: 100%;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+
+  div:nth-child(2):not(.filepreview-container) {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}
+
+.form-container {
+  margin-top: 0 !important;
+  width: 100%;
+}
+
+.noteSubmit {
+  width: 100%;
+}
+
+.note-drop-zone {
+  width: 80%;
+  height: 200px;
+  border-radius: 5px;
+  border: dashed 2px darkgrey;
+  display: flex;
+  flex-direction: column;
+
+  div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+.filepreview-container {
+  padding: 0;
+  font-size: 0;
+  -ms-flex-wrap: wrap;
+  -ms-flex-direction: column;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  display: flex;
+
+  .filepreview {
+    -webkit-box-flex: auto;
+    -ms-flex: auto;
+    flex: auto;
+    width: 200px;
+    margin: 0;
+  }
+}
+
+.filepreview-title {
+  span {
+    overflow: hidden;
+  }
+}
+
+@media all and (min-width: 600px) {
+  .filepreview-container {
+    padding: 0.5vw;
+
+    .filepreview {
+      margin: 0.5vw;
+    }
+  }
+
+  .form-container {
+    width: 80%;
+    flex: none !important;
+  }
+}

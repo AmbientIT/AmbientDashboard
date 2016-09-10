@@ -19,6 +19,7 @@ import {
   passportMiddleware,
   sessionMiddleware,
   routerMiddleWare,
+  errorMiddleware,
 } from './middlewares'
 
 /**
@@ -31,6 +32,7 @@ export default async () => {
   logger.debug('Creating server...', { scope: 'startup' })
   getConfiguredContainer()
   const app = new Koa()
+  app.use(errorMiddleware())
   app.use(sessionMiddleware())
   app.use(respond())
   app.use(convert(cors()))
@@ -40,7 +42,6 @@ export default async () => {
     app.use(webpackDevMiddleware())
   }
   app.use(serveFrontMiddleware())
-
   app.use(passportMiddleware())
   app.use(graphqlMiddleware())
   app.use(routerMiddleWare())

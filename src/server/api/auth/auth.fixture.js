@@ -1,4 +1,4 @@
-import User from '../models/user.model.js'
+import User from '../../models/mongoose/user'
 
 export default async () => {
   try {

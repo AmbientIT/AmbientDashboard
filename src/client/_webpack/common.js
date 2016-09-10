@@ -1,5 +1,6 @@
 const webpackMerge = require('webpack-merge')
 const { DefinePlugin } = require('webpack')
+const { HOST, PORT } = require('../../server/_core').env
 
 const ENV = require('yargs').argv.env || 'development'
 
@@ -9,7 +10,7 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
     extensions: ['', '.jsx', '.js', '.json'],
     modulesDirectories: ['node_modules'],
     alias: {
-      styles: `${process.cwd()}/src/client/styles`,
+      components: `${process.cwd()}/src/client/components`,
     },
   },
   module: {
@@ -26,8 +27,12 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015', 'stage-0', 'react'],
-          plugins: ['transform-decorators-legacy'],
+          presets: ['es2015', 'stage-1', 'react'],
+          plugins: [
+            'transform-decorators-legacy',
+            'transform-runtime',
+            `${process.cwd()}/build/babelRelayPlugin`,
+          ],
         },
       },
       {
@@ -36,7 +41,7 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
       },
       {
         test: /\.css$/,
-        loaders: ['isomorphic-style-loader', 'style-loader', 'css-loader'],
+        loaders: ['isomorphic-style-loader', 'style-loader', 'css-loader', 'postcss-loader?sourceMap=inline'],
       },
       {
         test: /\.(gif|png|jpe?g)$/i,
@@ -55,9 +60,17 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
   plugins: [
     new DefinePlugin({
       'process.env': {
-        NODE_ENV: `"${ENV}"`,
+        NODE_ENV: `'${ENV}'`,
         CLIENT: true,
+        GRAPHQL: { HOST: `'${HOST}'`, PORT: `'${PORT}'` },
       },
     }),
+  ],
+  postcss: [
+    require('stylelint')({ }),
+    require('precss')(),
+    require('postcss-cssnext')(),
+    require('postcss-browser-reporter')(),
+    require('postcss-reporter')(),
   ],
 })
