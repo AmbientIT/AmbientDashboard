@@ -15,10 +15,10 @@ export default (router) => {
       console.log(file)
       const ext = mime.extension(file.mimetype)
       await fs.rename(file.path, `${file.path}.${ext}`)
-      ctx.body = {
+      ctx.ok({
         url: `http://${env.HOST}:${env.PORT}/${file.filename}.${ext}`,
         name: file.filename,
         type: file.mimetype,
-      }
+      })
     })
 }

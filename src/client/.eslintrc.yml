@@ -8,6 +8,7 @@ settings:
     webpack:
       config: _webpack/common.js
 globals:
+  NODE_ENV: true
   GRAPHQL: true
   GOOGLEID: true
   GOOGLEREDIRECTURI: true

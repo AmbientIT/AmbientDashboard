@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import apolloClient from 'store/apollo' // eslint-disable-line
 import configureStore from 'store/configureStore' //eslint-disable-line
-import routes from './routes'
+import getRoutes from './routes'
 import 'styles/main.css' // eslint-disable-line
 
 const store = configureStore()
@@ -15,6 +15,8 @@ const store = configureStore()
 const browserHistory = useRouterHistory(createHistory)({
   basename: '/',
 })
+
+const routes = getRoutes(store)
 
 export default () => {
   return (

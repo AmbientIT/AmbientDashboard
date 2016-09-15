@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem'
 import AppBar from 'material-ui/AppBar'
 import IconButton from 'material-ui/IconButton'
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
+import { logout } from 'services/auth' //eslint-disable-line
 
 export default class Dashboard extends Component {
   static propTypes = {
@@ -31,7 +32,9 @@ export default class Dashboard extends Component {
   }
 
   logout = () => {
-    this.context.router.push('/login')
+    logout()
+    console.log(this.context.router)
+    this.context.router.go('/login')
   }
 
   render() {

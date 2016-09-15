@@ -1,32 +1,23 @@
 import React from 'react'
-import { IndexRoute, Route } from 'react-router/es6'
-import { loadRoute, errorLoading } from 'containers/routes' //eslint-disable-line
+import { Route } from 'react-router/es6'
+import { loadRoute, errorLoading, requireRoutes } from 'containers/routes' //eslint-disable-line
+import { routeName as parentRoute } from '../dashboard.route'
 
-export default (
-  <Route
-    path="/note"
-    getComponent={(location, cb) => {
-      System.import('./Note').then(loadRoute(cb)).catch(errorLoading)
-    }}
-    key="note"
-    parent="dashboard"
-  >
-    <IndexRoute
-      getComponent={(location, cb) => {
-        System.import('./list/NoteList').then(loadRoute(cb)).catch(errorLoading)
-      }}
-    />
+export const parent = parentRoute
+export const routeName = 'note'
+
+export default store => {
+  const noteRoutes = requireRoutes(routeName, store)
+  return (
     <Route
-      path="add"
+      path="/note"
       getComponent={(location, cb) => {
-        System.import('./create/NoteCreate').then(loadRoute(cb)).catch(errorLoading)
+        System.import('./Note').then(loadRoute(cb)).catch(errorLoading)
       }}
-    />
-    <Route
-      path="edit/:id"
-      getComponent={(location, cb) => {
-        System.import('./edit/NoteEdit').then(loadRoute(cb)).catch(errorLoading)
-      }}
-    />
-  </Route>
-)
+      key="note"
+      parent="dashboard"
+    >
+      {noteRoutes.map(route => route)}
+    </Route>
+  )
+}

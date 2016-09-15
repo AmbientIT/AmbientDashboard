@@ -1,5 +1,6 @@
 const webpackMerge = require('webpack-merge')
 const { DefinePlugin } = require('webpack')
+const { readFileSync } = require('fs')
 const { HOST, PORT, google } = require('../../server/_core').env
 
 const ENV = require('yargs').argv.env || 'development'
@@ -25,13 +26,7 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
         test: /\.jsx|.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query: {
-          presets: ['es2015-native-modules', 'stage-1', 'react'],
-          plugins: [
-            'transform-decorators-legacy',
-            'transform-runtime',
-          ],
-        },
+        query: JSON.parse(readFileSync(`${process.cwd()}/src/client/.babelrc`)),
       },
       {
         test: /\.json$/,

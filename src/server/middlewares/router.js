@@ -6,8 +6,8 @@ import { logger } from '../_core'
 const router = new Router()
 try {
   createApis(router)
-} catch (e) {
-  logger.error(e)
+} catch (err) {
+  logger.error(err, { scope: 'creating api' })
 }
 
 export const routerMiddleWare = () => compose([

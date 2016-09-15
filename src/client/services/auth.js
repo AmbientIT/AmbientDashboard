@@ -1,18 +1,15 @@
 import http from 'axios'
 
+const { CLIENT } = process.env
+
 export const googleAuth = async data => {
-  let authData
-  try {
-    authData = await http.post('/auth/google', data)
-  } catch (err) {
-    console.error(err)
-  }
-  return authData.data
+  return await http.post('/auth/google', data)
+    .then(authData => authData.data)
 }
 
 export const getToken = () => {
   let response
-  if (global.localStorage) {
+  if (CLIENT) {
     response = localStorage.getItem('token')
   } else {
     response = ''
@@ -20,46 +17,16 @@ export const getToken = () => {
   return response
 }
 
-export const whoAmI = () => {
-  return http.get('auth/me', {
+export const whoAmI = async () => {
+  return await http.get('auth/me', {
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },
-  })
-}
-
-/* eslint no-extra-boolean-cast: 0 */
-export const isAuthenticated = () => {
-  let response
-  if (global.localStorage) {
-    response = !!localStorage.getItem('token')
-  } else {
-    response = true
-  }
-  return response
+  }).then(response => response.data)
 }
 
 export const logout = () => {
-  if (global.localStorage) {
+  if (CLIENT) {
     localStorage.removeItem('token')
-  }
-}
-
-export const requireAuth = (nextState, replace) => {
-  console.log('require auth', nextState, replace)
-  if (!isAuthenticated()) {
-    replace({
-      pathname: '/login',
-      state: { nextPathname: nextState.location.pathname },
-    })
-  }
-}
-
-export const forbiddenIfLoggedIn = (nextState, replace) => {
-  if (isAuthenticated()) {
-    replace({
-      pathname: '/',
-      state: { nextPathname: nextState.location.pathname },
-    })
   }
 }

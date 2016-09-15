@@ -1,28 +1,22 @@
 import React from 'react'
-import { Route, IndexRoute } from 'react-router/es6'
+import { Route } from 'react-router/es6'
+import { loadRoute, errorLoading, routeName as parentRoute, requireRoutes } from 'containers/routes' //eslint-disable-line
+import { requireAuth } from 'containers/guards' //eslint-disable-line
 
-import { loadRoute, errorLoading } from 'containers/routes' //eslint-disable-line
+export const parent = parentRoute
+export const routeName = 'dashboard'
 
-const requireDashboardRoutes = requireContext => requireContext.keys().map(requireContext)
-
-const dashboardRoutes = requireDashboardRoutes(require.context('./', true, /^\.\/.*\.route.jsx$/))
-  .filter(route => !!route.default)
-  .map(route => route.default)
-  .filter(route => route.props.parent === 'dashboard')
-
-export default (
-  <Route
-    getComponent={(location, cb) => {
-      System.import('./Dashboard').then(loadRoute(cb)).catch(errorLoading)
-    }}
-    key="dashboard"
-    parent="main"
-  >
-    <IndexRoute
+export default store => {
+  const dashboardRoutes = requireRoutes(routeName, store)
+  return (
+    <Route
       getComponent={(location, cb) => {
-        System.import('./home/Home').then(loadRoute(cb)).catch(errorLoading)
+        System.import('./Dashboard').then(loadRoute(cb)).catch(errorLoading)
       }}
-    />
-    {dashboardRoutes.map(route => route)}
-  </Route>
-)
+      key="dashboard"
+      onEnter={requireAuth(store)}
+    >
+      {dashboardRoutes.map(route => route)}
+    </Route>
+  )
+}

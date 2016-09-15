@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import actions from 'store/actions' // eslint-disable-line
@@ -6,7 +6,7 @@ import GoogleAuthPopup from './services/GoogleAuthPopup' // eslint-disable-line
 
 const { googleLogin } = actions.login
 
-console.log(googleLogin)
+const { string, func } = PropTypes
 
 @connect(
   () => ({}),
@@ -14,10 +14,10 @@ console.log(googleLogin)
 )
 export default class Login extends Component {
   static propTypes = {
-    googleLogin: React.PropTypes.func,
-    clientId: React.PropTypes.string,
-    redirectUri: React.PropTypes.string,
-    scope: React.PropTypes.string,
+    googleLogin: func,
+    clientId: string,
+    redirectUri: string,
+    scope: string,
   }
 
   static defaultProps = {
@@ -44,7 +44,8 @@ export default class Login extends Component {
       const code = await this.popup.show()
       await googleLogin(Object.assign(code, { clientId, redirectUri }))
       this.setState({ isLoading: false })
-      this.context.router.push('/')
+      console.log('lool')
+      this.context.router.push('/note')
     } catch (err) {
       console.error(err)
     }

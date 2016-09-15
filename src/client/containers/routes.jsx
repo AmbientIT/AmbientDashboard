@@ -1,11 +1,13 @@
 import React from 'react'
 import { Route } from 'react-router/es6'
 
-const requireAllRoutes = requireContext => requireContext.keys().map(requireContext)
+const requireRoutesHelper = requireContext => requireContext.keys().map(requireContext)
 
-const appRoutes = requireAllRoutes(require.context('./', true, /^\.\/.*\.route.jsx$/))
-  .map(route => route.default)
-  .filter(route => route.props.parent === 'main')
+export const requireRoutes = (routeName, store) => {
+  return requireRoutesHelper(require.context('./', true, /^\.\/.*\.route.jsx$/))
+    .filter(route => route.parent === routeName)
+    .map(route => route.default(store))
+}
 
 export const errorLoading = err => {
   console.error('Dynamic page loading failed', err)
@@ -13,8 +15,13 @@ export const errorLoading = err => {
 
 export const loadRoute = cb => module => cb(null, module.default)
 
-export default (
-  <Route path="/">
-    {appRoutes.map(route => route)}
-  </Route>
-)
+export const routeName = 'main'
+
+export default store => {
+  const appRoutes = requireRoutes(routeName, store)
+  return (
+    <Route path="/">
+      {appRoutes.map(route => route)}
+    </Route>
+  )
+}

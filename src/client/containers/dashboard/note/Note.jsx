@@ -17,7 +17,7 @@ const Note = ({ children, client }) => {
   })
   return (
     <div>
-      <Link	to="/note/add" style={style}>
+      <Link	to="/note/create" style={style}>
         <FloatingActionButton>
           <ContentAdd />
         </FloatingActionButton>

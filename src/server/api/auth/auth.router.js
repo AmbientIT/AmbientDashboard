@@ -1,13 +1,18 @@
 import User from '../../models/mongoose/user'
 import { createJWT, getGoogleToken, getGoogleProfile } from '../../services/auth.service'
+import isAuthenticated from '../../middlewares/guards/isAuthenticated'
 
 export default router => {
+  router.get('/auth/me', isAuthenticated, ctx => ctx.ok(ctx.user))
+
   router.post('/auth/google', async ctx => {
-    const profile = await getGoogleToken({
+    const { access_token } = await getGoogleToken({
       code: ctx.request.body.code,
       'client_id': ctx.request.body.clientId, //eslint-disable-line
       'redirect_uri': ctx.request.body.redirectUri, //eslint-disable-line
-    }).then(({ access_token }) => getGoogleProfile(access_token))
+    })
+
+    const profile = await getGoogleProfile(access_token)
 
     if (profile.error) {
       throw profile.error
@@ -25,9 +30,9 @@ export default router => {
       })
       user = await newUser.save()
     }
-    ctx.body = {
+    ctx.ok({
       token: createJWT(user),
       user,
-    }
+    })
   })
 }
