@@ -2,11 +2,10 @@ import React, { PropTypes, Component } from 'react'
 import Dropzone from 'react-dropzone'
 import Paper from 'material-ui/Paper'
 
-import FilePreview from '../../../../components/FilePreview'
+import FilePreview from 'components/FilePreview' //eslint-disable-line
 
 export default class NoteDropzone extends Component {
   static propTypes = {
-    note: PropTypes.object,
     onUpload: PropTypes.func,
   }
 

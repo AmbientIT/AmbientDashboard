@@ -9,6 +9,5 @@ export const env = {
   ...yenv(),
 }
 
-export * from './configureContainer'
 export * from './db'
 export * from './logger'

@@ -1,17 +1,16 @@
 const webpackMerge = require('webpack-merge')
 const { DefinePlugin } = require('webpack')
-const { HOST, PORT } = require('../../server/_core').env
+const { HOST, PORT, google } = require('../../server/_core').env
 
 const ENV = require('yargs').argv.env || 'development'
 
 module.exports = webpackMerge.smart(require(`./${ENV}`), {
   resolve: {
-    root: `${process.cwd()}/src/client`,
     extensions: ['', '.jsx', '.js', '.json'],
-    modulesDirectories: ['node_modules'],
-    alias: {
-      components: `${process.cwd()}/src/client/components`,
-    },
+    modules: [
+      `${process.cwd()}/src/client`,
+      `${process.cwd()}/node_modules`,
+    ],
   },
   module: {
     preLoaders: [
@@ -27,11 +26,10 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015', 'stage-1', 'react'],
+          presets: ['es2015-native-modules', 'stage-1', 'react'],
           plugins: [
             'transform-decorators-legacy',
             'transform-runtime',
-            `${process.cwd()}/build/babelRelayPlugin`,
           ],
         },
       },
@@ -63,6 +61,9 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
         NODE_ENV: `'${ENV}'`,
         CLIENT: true,
         GRAPHQL: { HOST: `'${HOST}'`, PORT: `'${PORT}'` },
+        GOOGLEID: `'${google.GOOGLEID}'`,
+        GOOGLEREDIRECTURI: `'${google.REDIRECTURI}'`,
+        GOOGLESCOPE: `'${google.SCOPE}'`,
       },
     }),
   ],

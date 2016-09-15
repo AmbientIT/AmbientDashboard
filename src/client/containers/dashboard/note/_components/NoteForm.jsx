@@ -4,10 +4,20 @@ import { FormsyDate, FormsyText } from 'formsy-material-ui/lib'
 import RaisedButton from 'material-ui/RaisedButton'
 import Paper from 'material-ui/Paper'
 
+const {
+  shape,
+  string,
+  instanceOf,
+  func,
+} = PropTypes
+
 export default class NoteForm extends Component {
   static propTypes = {
-    note: PropTypes.object,
-    submitForm: PropTypes.func,
+    note: shape({
+      name: string,
+      date: instanceOf(Date),
+    }),
+    submitForm: func,
   }
 
   static defaultProps = {

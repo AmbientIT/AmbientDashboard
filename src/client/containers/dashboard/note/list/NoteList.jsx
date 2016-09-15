@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import Relay from 'react-relay'
+import { graphql, withApollo } from 'react-apollo'
+import { connect } from 'react-redux'
 import FlatButton from 'material-ui/FlatButton'
 import ActionAndroid from 'material-ui/svg-icons/action/android'
 import {
@@ -10,31 +11,93 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table'
-import DeleteNoteMutation from '../_mutations/note.delete'
+import { FETCH_NOTES, FETCH_NOTE, DELETE_NOTE } from '../_graphql'
+import { removeNote } from '../_utils/notes.actions'
 
+const { shape, arrayOf, string, number, func, bool } = PropTypes
 
+@connect(
+  ({ notes: { list } }) => ({ list }),
+  (dispatch) => ({
+    onRemoveNote(id) {
+      dispatch(removeNote(id))
+    },
+  })
+)
+@graphql(FETCH_NOTES)
+@graphql(DELETE_NOTE, {
+  props: ({ mutate, ownProps }) => ({
+    deleteNote: id => mutate({ variables: { id } }).then(() => ownProps.onRemoveNote(id)),
+  }),
+})
 class NoteList extends Component {
   static propTypes = {
-    viewer: PropTypes.object,
+    deleteNote: func,
+    list: arrayOf(shape({
+      id: string,
+      name: string,
+      attachements: shape({
+        count: number,
+      }),
+    })),
+    client: shape({
+      query: func,
+    }),
+    data: shape({
+      loading: bool,
+    }),
   }
 
   static contextTypes = {
-    router: PropTypes.object,
+    router: shape({
+      push: func,
+    }),
   }
 
   goToDetailView = id => {
     this.context.router.push(`/note/edit/${id}`)
   }
 
-  deleteNote(id) {
-    const { viewer } = this.props
-    Relay.Store.commitUpdate(
-      new DeleteNoteMutation({ id, viewer })
-    )
+  prefetch = id => {
+    this.props.client.query({
+      query: FETCH_NOTE,
+      variables: { id },
+    })
+  }
+
+  renderData() {
+    const { list } = this.props
+    return list.map((note, index) => (
+      <TableRow key={index} selected={note.selected}>
+        <TableRowColumn>{note.id}</TableRowColumn>
+        {/* <TableRowColumn>{note.owner.name}</TableRowColumn> */}
+        <TableRowColumn>{note.name}</TableRowColumn>
+        <TableRowColumn>{new Intl.DateTimeFormat().format(new Date(note.date))}</TableRowColumn>
+        <TableRowColumn>
+          <FlatButton
+            onTouchTap={() => this.goToDetailView(note.id)}
+            onMouseOver={() => this.prefetch(note.id)}
+            icon={<ActionAndroid />}
+            style={{ margin: 12 }}
+          />
+        </TableRowColumn>
+        <TableRowColumn>
+          <FlatButton
+            onTouchTap={() => this.props.deleteNote(note.id)}
+            icon={<ActionAndroid />}
+            style={{ margin: 12 }}
+          />
+        </TableRowColumn>
+      </TableRow>
+      ))
+  }
+
+  renderLoader() {
+    return 'loading...'
   }
 
   render() {
-    const { viewer } = this.props
+    const { data } = this.props
     return (
       <Table
         height="500px"
@@ -71,47 +134,11 @@ class NoteList extends Component {
           showRowHover
           stripedRows
         >
-        {viewer.notes.edges.map(({ node }, index) => (
-          <TableRow key={index} selected={node.selected}>
-            <TableRowColumn>{node.id}</TableRowColumn>
-            {/* <TableRowColumn>{note.owner.name}</TableRowColumn> */}
-            <TableRowColumn>{node.name}</TableRowColumn>
-            <TableRowColumn>{new Intl.DateTimeFormat().format(new Date(node.date))}</TableRowColumn>
-            <TableRowColumn>
-              <FlatButton
-                onTouchTap={() => this.goToDetailView(node.id)}
-                icon={<ActionAndroid />}
-                style={{ margin: 12 }}
-              />
-            </TableRowColumn>
-            <TableRowColumn>
-              <FlatButton
-                onTouchTap={() => this.deleteNote(node.id)}
-                icon={<ActionAndroid />}
-                style={{ margin: 12 }}
-              />
-            </TableRowColumn>
-          </TableRow>
-          ))}
+          {data.loading ? this.renderLoader() : this.renderData()}
         </TableBody>
       </Table>
     )
   }
 }
 
-export default Relay.createContainer(NoteList, {
-  fragments: {
-    viewer: () => Relay.QL`fragment on Viewer {
-      notes(first:10) {
-        count
-        edges {
-          node {
-            id
-            name
-            date
-          }
-        }
-      }
-    }`,
-  },
-})
+export default withApollo(NoteList)

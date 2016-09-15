@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
+import { withApollo } from 'react-apollo'
 import { Link } from 'react-router'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
+import { FETCH_NOTES } from './_graphql'
 
 const style = {
   position: 'fixed',
@@ -9,7 +11,10 @@ const style = {
   right: '30px',
 }
 
-const Note = ({ children }) => {
+const Note = ({ children, client }) => {
+  client.query({
+    query: FETCH_NOTES,
+  })
   return (
     <div>
       <Link	to="/note/add" style={style}>
@@ -23,7 +28,10 @@ const Note = ({ children }) => {
 }
 
 Note.propTypes = {
-  children: React.PropTypes.node,
+  children: PropTypes.node,
+  client: PropTypes.shape({
+    query: PropTypes.func,
+  }),
 }
 
-export default Note
+export default withApollo(Note)

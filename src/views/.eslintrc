@@ -4,6 +4,11 @@
   "env": {
     "browser": true
   },
+  "settings": {
+    "import/resolver": {
+      "components": {},
+    }
+  },
   "rules": {
     "semi": ["error", "never"],
     "arrow-body-style": 0,

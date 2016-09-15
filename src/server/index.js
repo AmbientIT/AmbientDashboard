@@ -4,10 +4,10 @@ import respond from 'koa-respond'
 import bodyParser from 'koa-bodyparser'
 import koaLogger from 'koa-logger'
 import cors from 'kcors'
-// import { scopePerRequest } from 'awilix-koa'
+import { scopePerRequest } from 'awilix-koa'
 import {
   logger,
-  getConfiguredContainer,
+  getAwilixContainer,
   env,
   connectDatabase,
 } from './_core'
@@ -16,8 +16,6 @@ import {
   webpackDevMiddleware,
   serveFrontMiddleware,
   graphqlMiddleware,
-  passportMiddleware,
-  sessionMiddleware,
   routerMiddleWare,
   errorMiddleware,
 } from './middlewares'
@@ -30,10 +28,8 @@ import {
  */
 export default async () => {
   logger.debug('Creating server...', { scope: 'startup' })
-  getConfiguredContainer()
   const app = new Koa()
   app.use(errorMiddleware())
-  app.use(sessionMiddleware())
   app.use(respond())
   app.use(convert(cors()))
   app.use(bodyParser())
@@ -42,9 +38,9 @@ export default async () => {
     app.use(webpackDevMiddleware())
   }
   app.use(serveFrontMiddleware())
-  app.use(passportMiddleware())
   app.use(graphqlMiddleware())
   app.use(routerMiddleWare())
+
   // Default handler when nothing stopped the chain.
   app.use(notFoundHandler())
 

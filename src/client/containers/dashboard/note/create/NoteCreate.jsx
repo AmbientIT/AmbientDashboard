@@ -1,32 +1,36 @@
-import React, { Component, PropTypes } from 'react'
-import Relay from 'react-relay'
+import { graphql } from 'react-apollo'
+import { connect } from 'react-redux'
 import NoteForm from '../_components/NoteForm'
-import AddNoteMutation from '../_mutations/note.add'
+import { CREATE_NOTE } from '../_graphql'
+import { createNote } from '../_utils/notes.actions'
 
-class NoteCreate extends Component {
-  static propTypes = {
-    viewer: PropTypes.object,
-  }
-  submitForm = ({ name, date }) => {
-    const { viewer } = this.props
-    Relay.Store.commitUpdate(
-      new AddNoteMutation({ name, date, viewer })
-    )
-  }
-  render() {
-    return (
-      <NoteForm submitForm={this.submitForm} />
-    )
-  }
-}
-
-export default Relay.createContainer(NoteCreate, {
-  fragments: {
-    viewer: () => Relay.QL`fragment on Viewer {
-      id
-      notes {
-        count
+const FormWithQuery = graphql(CREATE_NOTE, {
+  props: ({ mutate, ownProps }) => ({
+    submitForm: async note => {
+      try {
+        const {
+          data: {
+            addNote: {
+              changedNoteEdge: {
+                node,
+              },
+            },
+          },
+        } = await mutate({ variables: note })
+        ownProps.history.push(`/note/edit/${node.id}`)
+        ownProps.createNote(node)
+      } catch (err) {
+        console.error('error createNote', err)
       }
-    }`,
-  },
-})
+    },
+  }),
+})(NoteForm)
+
+export default connect(
+  () => ({}),
+  (dispatch) => ({
+    createNote(note) {
+      dispatch(createNote(note))
+    },
+  })
+)(FormWithQuery)
