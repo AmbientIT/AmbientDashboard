@@ -1,5 +1,5 @@
 import User from '../../models/mongoose/user'
-import { createJWT, getGoogleToken, getGoogleProfile } from '../../services/auth.service'
+import { createJWT, getGoogleToken, getGoogleProfile } from '../../services/auth'
 import isAuthenticated from '../../middlewares/guards/isAuthenticated'
 
 export default router => {
