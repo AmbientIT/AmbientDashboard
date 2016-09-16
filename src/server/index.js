@@ -1,3 +1,5 @@
+import 'source-map-support/register';
+
 import Koa from 'koa'
 import convert from 'koa-convert'
 import respond from 'koa-respond'
