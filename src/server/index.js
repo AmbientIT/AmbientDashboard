@@ -13,7 +13,7 @@ import {
   notFoundHandler,
   webpackDevMiddleware,
   serveFrontMiddleware,
-  graphqlMiddleware,
+  // graphqlMiddleware,
   routerMiddleWare,
   errorMiddleware,
   exposeLoggedUserMiddleware,
@@ -38,15 +38,11 @@ export default async () => {
     app.use(webpackDevMiddleware())
   }
   app.use(respond())
-  // app.use(convert(cors()))
+  app.use(convert(cors()))
   app.use(bodyParser())
   app.use(serveFrontMiddleware())
   app.use(exposeLoggedUserMiddleware())
-  app.use(async (ctx, next) => {
-    console.log(ctx.payload)
-    await next()
-  })
-  app.use(graphqlMiddleware())
+  // app.use(graphqlMiddleware())
   app.use(routerMiddleWare())
   app.use(notFoundHandler())
 
