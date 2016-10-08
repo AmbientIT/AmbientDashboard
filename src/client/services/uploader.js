@@ -7,5 +7,5 @@ export const uploadFile = ({ file, url }) => {
   return fetch(url, {
     method: 'post',
     body: data,
-  }).then(response => response.json())
+  }).then(res => res.json())
 }

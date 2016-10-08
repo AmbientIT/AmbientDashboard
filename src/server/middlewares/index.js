@@ -1,7 +1,6 @@
 export * from './notFound'
 export * from './webpack'
 export * from './serveFront'
-export * from './graphql'
 export * from './router'
 export * from './error'
 export * from './auth'

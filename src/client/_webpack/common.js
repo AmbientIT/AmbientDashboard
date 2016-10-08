@@ -26,7 +26,17 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
         test: /\.jsx|.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query: JSON.parse(readFileSync(`${process.cwd()}/src/client/.babelrc`)),
+        query: {
+          presets: [
+            ['es2015', { modules: false }],
+            'stage-0',
+            'react',
+          ],
+          plugins: [
+            'transform-decorators-legacy',
+            'transform-runtime',
+          ],
+        },
       },
       {
         test: /\.json$/,
@@ -35,6 +45,10 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
       {
         test: /\.css$/,
         loaders: ['isomorphic-style-loader', 'style-loader', 'css-loader', 'postcss-loader?sourceMap=inline'],
+      },
+      {
+        test: /\.scss$/,
+        loaders: ['isomorphic-style-loader', 'style', 'css', 'sass'],
       },
       {
         test: /\.(gif|png|jpe?g)$/i,

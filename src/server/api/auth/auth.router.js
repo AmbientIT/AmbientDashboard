@@ -32,10 +32,8 @@ export default router => {
         })
         user = await newUser.save()
       }
-      ctx.ok({
-        token: createJWT(user),
-        user,
-      })
+      const token = createJWT(user)
+      ctx.ok({ token, user })
     } catch (err) {
       console.error(err)
       throw createError(401, err.message)

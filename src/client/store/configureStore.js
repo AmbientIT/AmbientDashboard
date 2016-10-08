@@ -4,9 +4,16 @@ import createLogger from 'redux-logger'
 import apolloClient from './apollo'
 import rootReducer from './reducer'
 
+const middlewares = [
+  thunk,
+  apolloClient.middleware(),
+]
+if (typeof window === 'object') {
+  middlewares.push(createLogger())
+}
+
 const createStoreWithMiddleware = applyMiddleware(
   thunk,
-  createLogger(),
   apolloClient.middleware(),
 )(createStore)
 

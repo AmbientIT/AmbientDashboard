@@ -7,6 +7,6 @@ import { listModules } from 'awilix'
  * The router to pass to the API factories.
  */
 export default (router) => {
-  return listModules('./**/*.router.js', { cwd: __dirname })
+  return listModules('./**/*.router.*', { cwd: __dirname })
     .forEach(module => require(module.path).default(router))
 }

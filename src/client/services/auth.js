@@ -9,24 +9,29 @@ export const googleAuth = async data => {
       'Content-type': 'application/json',
     },
     body: JSON.stringify(data),
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .then(response => {
+      window.document.cookie = `token=${response.token}`
+      return response
+    })
 }
 
-export const getToken = () => {
+export const getToken = (ctx) => {
   let response
   if (CLIENT) {
     response = localStorage.getItem('token')
   } else {
-    response = ''
+    response = ctx.cookies.get('token')
   }
   return response
 }
 
-export const whoAmI = async () => {
-  return await fetch('auth/me', {
+export const whoAmI = async (ctx) => {
+  return await fetch('http://localhost:3000/auth/me', {
     method: 'get',
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${getToken(ctx)}`,
     },
   }).then(response => response.json())
 }

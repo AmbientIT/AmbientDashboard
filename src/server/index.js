@@ -1,4 +1,4 @@
-import 'source-map-support/register';
+import 'source-map-support/register'
 
 import Koa from 'koa'
 import convert from 'koa-convert'
@@ -44,7 +44,6 @@ export default async () => {
   app.use(bodyParser())
   app.use(serveFrontMiddleware())
   app.use(exposeLoggedUserMiddleware())
-  // app.use(graphqlMiddleware())
   app.use(routerMiddleWare())
   app.use(notFoundHandler())
 
