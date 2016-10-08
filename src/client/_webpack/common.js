@@ -47,10 +47,6 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
         loaders: ['isomorphic-style-loader', 'style-loader', 'css-loader', 'postcss-loader?sourceMap=inline'],
       },
       {
-        test: /\.scss$/,
-        loaders: ['isomorphic-style-loader', 'style', 'css', 'sass'],
-      },
-      {
         test: /\.(gif|png|jpe?g)$/i,
         loader: 'file?name=../../server/public/img/[name].[ext]',
       },

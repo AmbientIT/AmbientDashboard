@@ -5,11 +5,9 @@ import { createHistory } from 'history'
 import apolloClient from './store/apollo'
 import configureStore from './store/configureStore'
 import getRoutes from './scenes/routes'
-import './styles/main.css'
+// import './styles/main.css'
 
-console.log(window.APOLLO_STATE)
-
-const store = configureStore(window.APOLLO_STATE)
+const store = configureStore(window.INITIAL_STATE)
 
 const browserHistory = useRouterHistory(createHistory)({
   basename: '/',

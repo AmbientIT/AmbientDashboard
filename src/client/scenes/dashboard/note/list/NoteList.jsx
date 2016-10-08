@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql, withApollo } from 'react-apollo'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 import FlatButton from 'material-ui/FlatButton'
 import ActionAndroid from 'material-ui/svg-icons/action/android'
 import {
@@ -15,9 +15,9 @@ import { FETCH_NOTES, FETCH_NOTE, DELETE_NOTE } from '../_graphql'
 
 const { shape, arrayOf, string, number, func, bool, object } = PropTypes
 
-@connect(
-  ({ login: { loggedUser } }) => ({ loggedUser }),
-)
+// @connect(
+//   ({ login: { loggedUser } }) => ({ loggedUser }),
+// )
 @graphql(FETCH_NOTES)
 @graphql(DELETE_NOTE, {
   props: ({ mutate }) => ({
