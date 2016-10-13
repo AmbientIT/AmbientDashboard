@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 import apolloClient from './apollo'
-import login from './reducers/login'
+import auth from './reducers/auth'
 
-export default combineReducers({ apollo: apolloClient.reducer(), login })
+export default combineReducers({ apollo: apolloClient.reducer(), auth })
 
 
 // const requireAllReducers = requireContext => {

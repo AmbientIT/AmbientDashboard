@@ -1,39 +1,28 @@
 import { bindActionCreators } from 'redux'
-import { getToken, logout } from '../services/auth'
-import { getLoggedUserAndLogin } from '../store/actions/login.actions'
-
-const logoutAndRedirect = (nextState, replace) => {
-  logout()
-  replace('/login')
-}
+import { getLoggedUserAndLogin } from './auth/_actions/auth.actions'
 
 export const requireAuth = ({ getState, dispatch }, ctx) => async (nextState, replace, callback) => {
-  const { login } = getState()
-  const auth = bindActionCreators({ getLoggedUserAndLogin }, dispatch)
-  if (!login.loggedUser) {
-    try {
-      await auth.getLoggedUserAndLogin(ctx)
-    } catch (err) {
-      console.error('requireAuth error', err)
-      logoutAndRedirect(nextState, replace)
+  const { auth } = getState()
+  const authActions = bindActionCreators({ getLoggedUserAndLogin }, dispatch)
+  if (!auth.loggedUser) {
+    const user = await authActions.getLoggedUserAndLogin(ctx)
+    if (!user) {
+      replace('/login')
     }
   }
   callback()
 }
+
 export const forbiddenIfLoggedIn = ({ getState, dispatch }, ctx) => async (nextState, replace, callback) => {
-  const { login } = getState()
-  const auth = bindActionCreators({ getLoggedUserAndLogin }, dispatch)
-  if (login.loggedUser) {
-    replace({ nextPathname: nextState.location.pathname }, '/note')
+  const { auth } = getState()
+  const authActions = bindActionCreators({ getLoggedUserAndLogin }, dispatch)
+  console.log('forbidden !!!!!', auth)
+  if (auth.loggedUser) {
+    replace('/note')
   } else {
-    try {
-      if (getToken(ctx)) {
-        await auth.getLoggedUserAndLogin(ctx)
-        replace('/note')
-      }
-    } catch (err) {
-      console.error('forbiddenIfLoggedInError', err)
-      logout()
+    const user = await authActions.getLoggedUserAndLogin(ctx, replace)
+    if (user) {
+      replace('/note')
     }
   }
   callback()

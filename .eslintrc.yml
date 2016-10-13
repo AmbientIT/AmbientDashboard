@@ -21,3 +21,4 @@ rules:
   - devDependencies: true
   import/prefer-default-export: 0
   no-underscore-dangle: 0
+  react/prefer-stateless-function: 0

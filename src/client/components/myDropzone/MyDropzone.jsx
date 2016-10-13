@@ -2,11 +2,12 @@ import React, { PropTypes, Component } from 'react'
 import Dropzone from 'react-dropzone'
 import Paper from 'material-ui/Paper'
 
-import FilePreview from '.././../../../components/FilePreview'
+import FilePreview from '../index'
 
-export default class NoteDropzone extends Component {
+export class MyDropzone extends Component {
   static propTypes = {
     onUpload: PropTypes.func,
+    label: PropTypes.string,
   }
 
   static defaultProps = {
@@ -14,10 +15,7 @@ export default class NoteDropzone extends Component {
     onDrop: () => {},
   }
 
-  constructor(props) {
-    super(props)
-    this.state = { filesPreview: [] }
-  }
+  state = { filesPreview: [] }
 
   onDrop = (files) => {
     this.setState({ filesPreview: files })
@@ -34,7 +32,7 @@ export default class NoteDropzone extends Component {
       <Paper>
         <div className="row center-xs">
           <Dropzone onDrop={this.onDrop} className="note-drop-zone">
-            <div>Déposez vos justificatifs associé à cette note.</div>
+            <div>{this.props.label}</div>
           </Dropzone>
         </div>
         <div className="filepreview-container">

@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react'
-import Formsy from 'formsy-react'
+import { Form } from 'formsy-react'
 import { FormsyDate, FormsyText } from 'formsy-material-ui/lib'
 import RaisedButton from 'material-ui/RaisedButton'
 import Paper from 'material-ui/Paper'
+import radium from 'radium'
+import style from './noteForm.style'
 
 const {
   shape,
@@ -10,32 +12,16 @@ const {
   instanceOf,
   func,
 } = PropTypes
-
-export default class NoteForm extends Component {
-  static propTypes = {
-    note: shape({
-      name: string,
-      date: instanceOf(Date),
-    }),
-    submitForm: func,
+@radium()
+export class NoteForm extends Component {
+  state = {
+    canSubmit: false,
+    DateTimeFormat: global.Intl.DateTimeFormat,
+    files: [],
   }
 
-  static defaultProps = {
-    note: {},
-    submitForm: () => {},
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      canSubmit: false,
-      DateTimeFormat: global.Intl.DateTimeFormat,
-      files: [],
-    }
-
-    this.errorMessages = {
-      wordsError: 'Please only use letters',
-    }
+  errorMessages = {
+    wordsError: 'Please only use letters',
   }
 
   enableButton = () => {
@@ -55,19 +41,21 @@ export default class NoteForm extends Component {
   }
 
   render() {
+    console.log('tru lalalala :    ', global.Intl.DateTimeFormat)
     const { wordsError } = this.errorMessages
     const { note, submitForm } = this.props
     return (
-      <Paper className="form-container" zDepth={3}>
-        <Formsy.Form
+      <Paper zDepth={3}>
+        <Form
           onValid={this.enableButton}
           onInvalid={this.disableButton}
           onValidSubmit={submitForm}
           onInvalidSubmit={this.notifyFormError}
-          className="noteForm "
+          style={style.form}
         >
-          <div className="row center-xs">
+          <div style={style.input}>
             <FormsyText
+              style={style.input}
               name="name"
               validations="isWords"
               validationError={wordsError}
@@ -77,26 +65,47 @@ export default class NoteForm extends Component {
               floatingLabelText="Titre"
             />
           </div>
-          <div className="row center-xs">
+          <div>
             <FormsyDate
+              style={style.input}
               name="date"
               required
               value={note.date}
               floatingLabelText="Date"
+              locale=""
               DateTimeFormat={this.state.DateTimeFormat}
               okLabel="OK"
               cancelLabel="Annuler"
               locale="fr"
             />
           </div>
-          <RaisedButton
-            className="noteSubmit"
-            type="submit"
-            label="Submit"
-            disabled={!this.state.canSubmit}
-          />
-        </Formsy.Form>
+          <div>
+            <RaisedButton
+              style={style.submit}
+              type="submit"
+              label="Submit"
+              disabled={!this.state.canSubmit}
+            />
+          </div>
+        </Form>
       </Paper>
     )
   }
 }
+
+NoteForm.propTypes = {
+  note: shape({
+    name: string,
+    date: instanceOf(Date),
+  }),
+  submitForm: func,
+}
+
+NoteForm.defaultProps = {
+  note: {},
+  submitForm: () => {},
+}
+
+// export const NoteForm = radium(NoteFormClass)
+
+// todo remove this when radium server rendering issue is fixed

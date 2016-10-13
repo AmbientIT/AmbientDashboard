@@ -1,3 +1,4 @@
+import fs from 'fs'
 import { match } from 'react-router'
 import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import { env } from '../../../_core'
@@ -21,4 +22,8 @@ export const getApolloClient = ({ headers }) => {
       headers,
     }),
   })
+}
+
+export const getGlobalCss = () => {
+  return fs.readFileSync(`${process.cwd()}/node_modules/normalize.css/normalize.css`, { encoding: 'utf8' })
 }

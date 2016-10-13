@@ -1,36 +1,35 @@
 import React, { PropTypes } from 'react'
-import serialize from 'serialize-javascript'
+// import { AppContainer } from 'react-hot-loader'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import { ApolloProvider } from 'react-apollo'
+import { RouterContext } from 'react-router'
+import { StyleRoot } from 'radium'
+import { getApolloClient } from './lib'
 
-const Html = ({ markup, initialState, apolloState }) => {
-  // const icon = require('../../../public/favicon.ico')
-
-  const initialStateScript = `
-    window.APOLLO_STATE=${serialize(apolloState)};
-    window.INITIAL_STATE=${serialize(Object.assign(initialState, apolloState))};
-  `
-
+const App = ({ ctx, renderProps }) => {
+  const { request: { headers } } = ctx
+  const userAgent = headers['user-agent']
+  const muiTheme = getMuiTheme(Object.assign({ userAgent }, lightBaseTheme))
   return (
-    <html lang="fr">
-      <head>
-        <base href="/" />
-        <meta charSet="utf-8" />
-        <title>Ambient</title>
-        {/* <link rel="shortcut icon" href={icon} /> */}
-      </head>
-      <body>
-        <div id="react-container" dangerouslySetInnerHTML={{ __html: markup }} />
-        <script dangerouslySetInnerHTML={{ __html: initialStateScript }} />
-        <script src="main.js" />
-      </body>
-    </html>
+    <MuiThemeProvider muiTheme={muiTheme}>
+      <StyleRoot>
+        <ApolloProvider client={getApolloClient({ headers })} >
+          <RouterContext {...renderProps} />
+        </ApolloProvider>
+      </StyleRoot>
+    </MuiThemeProvider>
   )
 }
 
-Html.propTypes = {
-  assets: PropTypes.object,
-  initialState: PropTypes.object,
-  apolloState: PropTypes.object,
-  markup: PropTypes.string,
+App.propTypes = {
+  ctx: PropTypes.shape({
+    request: PropTypes.shape({
+      headers: PropTypes.object,
+    }),
+  }),
+  renderProps: PropTypes.object,
 }
 
-export default Html
+export default App

@@ -1,10 +1,54 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
-import { uploadFile } from '../../../../services/uploader'
-import FilePreview from '../../../../components/FilePreview'
-import NoteDropzone from '../_components/NoteDropzone'
-import NoteForm from '../_components/NoteForm'
-import { FETCH_NOTE, UPDATE_NOTE } from '../_graphql'
+import { bindActionCreators } from 'redux'
+import { uploadAttachement } from '../_actions/attachement.actions'
+import { NoteForm, Attachements } from '../_components'
+import { FETCH_NOTE, UPDATE_NOTE, updateNoteMutation } from '../_graphql'
+import { MyDropzone } from '../../../../components'
+
+@connect(
+  state => state.auth ? { loggedUser: state.auth.loggedUser } || {} : {},
+  dispatch => bindActionCreators({ onUpload: uploadAttachement }, dispatch)
+)
+@graphql(FETCH_NOTE, {
+  options: ({ routeParams: { id } }) => ({ variables: { id } }),
+})
+@graphql(UPDATE_NOTE, { props: updateNoteMutation })
+export default class NoteEdit extends Component {
+  dropzoneLabel = 'drop some file here'
+
+  removeAttachementHandler = ({ id }) => {
+    console.log('remove attachements', id)
+  }
+
+  renderLoader() {
+    return <div>loading...</div>
+  }
+
+  renderForm() {
+    const { data: { note }, onUpload } = this.props
+    note.date = new Date(note.date)
+    console.log(note.attachements)
+    return (
+      <section>
+        <NoteForm note={note} submitForm={this.props.submitForm} />
+        <Attachements
+          attachements={note.attachements.edges}
+          onRemoveAttachement={this.removeAttachementHandler}
+        />
+        <MyDropzone
+          label={this.dropzoneLabel}
+          onUpload={onUpload}
+        />
+      </section>
+    )
+  }
+
+  render() {
+    return this.props.data.loading ? this.renderLoader() : this.renderForm()
+  }
+}
 
 const {
   shape,
@@ -16,114 +60,24 @@ const {
   bool,
 } = PropTypes
 
-@graphql(FETCH_NOTE, {
-  options: ({ routeParams: { id } }) => ({ variables: { id } }),
-})
-@graphql(UPDATE_NOTE, {
-  props: ({ mutate, ownProps }) => ({
-    submitForm: async note => {
-      try {
-        Object.assign(note, ownProps.params)
-
-        await mutate({
-          variables: note,
-          updateQueries: {
-            getNotes: (prev, { mutationResult }) => {
-              if (prev.viewer) {
-                const { notes } = prev.viewer
-
-                notes.edges = notes.edges.map(({ node }) => {
-                  const mappedNode = mutationResult.data.updateNote.changedNote
-
-                  return node.id === mappedNode.id
-                    ? {
-                      node: mappedNode,
-                    }
-                    : { node }
-                })
-              }
-              return prev
-            },
-          },
-        })
-
-        ownProps.history.push('/note')
-      } catch (err) {
-        console.error('update note error', err)
-      }
-    },
-  }),
-})
-export default class NoteEdit extends Component {
-  static propTypes = {
-    data: shape({
-      loading: bool,
-      note: shape({
-        id: string,
-        name: string,
-        date,
-        attachements: shape({
-          count: number,
-          edges: arrayOf(shape({
-            id: string,
-            name: string,
-            url: string,
-            type: string,
-          })),
-        }),
+NoteEdit.propTypes = {
+  data: shape({
+    loading: bool,
+    note: shape({
+      id: string,
+      name: string,
+      date,
+      attachements: shape({
+        count: number,
+        edges: arrayOf(shape({
+          id: string,
+          name: string,
+          url: string,
+          type: string,
+        })),
       }),
     }),
-    submitForm: func,
-  }
-
-  uploadHandler = async (file) => {
-    try {
-      const uploadedFile = await uploadFile({
-        file,
-        url: '/upload/attachement',
-        onProgress(progress) {
-          console.log(progress)
-        },
-      })
-      console.log(uploadedFile)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  removeAttachementHandler = ({ id }) => {
-    console.log('remove attachements', id)
-  }
-
-  renderLoader() {
-    return <div>loading...</div>
-  }
-
-  renderForm() {
-    const { data: { note } } = this.props
-    note.date = new Date(note.date)
-    return (
-      <section>
-        <NoteForm note={note} submitForm={this.props.submitForm} />
-        <div className="filepreview-container">
-          {note.attachements.edges.map(({ node }, index) => (
-            <FilePreview
-              file={node}
-              key={index}
-              removeFile={this.removeAttachementHandler}
-            />
-          ))}
-        </div>
-        <NoteDropzone onUpload={this.uploadHandler} />
-      </section>
-    )
-  }
-
-  render() {
-    return (
-      <div>
-        {this.props.data.loading ? this.renderLoader() : this.renderForm()}
-      </div>
-    )
-  }
+  }),
+  submitForm: func,
+  onUpload: func,
 }

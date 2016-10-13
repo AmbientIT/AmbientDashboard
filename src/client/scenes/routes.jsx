@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Route, IndexRoute } from 'react-router'
-import Login from './login/Login'
+import Auth from './auth/Auth'
 import Dashboard from './dashboard/Dashboard'
 import Home from './dashboard/home/Home'
 import Note from './dashboard/note/Note'
@@ -20,7 +20,7 @@ const getRoutes = ({ store, ctx }) => {
     <Route path="/">
       <Route
         path="/login"
-        component={Login}
+        component={Auth}
         onEnter={forbiddenIfLoggedIn(store, ctx)}
       />
       <Route
@@ -28,8 +28,7 @@ const getRoutes = ({ store, ctx }) => {
         component={Dashboard}
         onEnter={requireAuth(store, ctx)}
       >
-        <Route
-          path="/home"
+        <IndexRoute
           component={Home}
         />
         <Route

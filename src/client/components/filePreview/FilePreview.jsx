@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { Card, CardActions, CardMedia, CardTitle } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 
-
-export default class FilePreview extends Component {
+export class FilePreview extends Component {
   static propTypes = {
     file: PropTypes.shape({
       name: PropTypes.string,

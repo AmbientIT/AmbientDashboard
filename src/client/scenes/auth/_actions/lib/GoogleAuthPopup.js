@@ -3,8 +3,10 @@
 /* eslint no-restricted-syntax:0 */
 /* eslint prefer-const:0 */
 
+const { GOOGLEID, GOOGLEREDIRECTURI, GOOGLESCOPE } = process.env
+
 export default class GoogleAuthPopup {
-  constructor(clientId, redirectUri, scope, name) {
+  constructor(name, clientId = GOOGLEID, redirectUri = GOOGLEREDIRECTURI, scope = GOOGLESCOPE) {
     this.name = name
     this.redirectUri = redirectUri
     this.url = `https://accounts.google.com/o/oauth2/auth?scope=${scope}&client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`

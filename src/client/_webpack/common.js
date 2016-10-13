@@ -1,8 +1,6 @@
 const webpackMerge = require('webpack-merge')
 const { DefinePlugin } = require('webpack')
-const { readFileSync } = require('fs')
 const { HOST, PORT, google } = require('../../server/_core').env
-
 const ENV = require('yargs').argv.env || 'development'
 
 module.exports = webpackMerge.smart(require(`./${ENV}`), {
@@ -44,7 +42,7 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
       },
       {
         test: /\.css$/,
-        loaders: ['isomorphic-style-loader', 'style-loader', 'css-loader', 'postcss-loader?sourceMap=inline'],
+        loaders: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(gif|png|jpe?g)$/i,
@@ -72,11 +70,15 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
       },
     }),
   ],
-  postcss: [
-    require('stylelint')({ }),
-    require('precss')(),
-    require('postcss-cssnext')(),
-    require('postcss-browser-reporter')(),
-    require('postcss-reporter')(),
-  ],
+  postcss(webpack) {
+    return [
+      require('stylelint')({ }),
+      require('precss')(),
+      require('postcss-import')({ addDependencyTo: webpack }),
+      require('postcss-url')(),
+      require('postcss-cssnext')(),
+      require('postcss-browser-reporter')(),
+      require('postcss-reporter')(),
+    ]
+  },
 })
