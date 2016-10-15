@@ -3,7 +3,6 @@ import { ApolloProvider } from 'react-apollo'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { StyleRoot } from 'radium'
 
-
 export default class App extends Component {
   getChildContext() {
     return {
@@ -30,6 +29,10 @@ App.propTypes = {
   apolloClient: PropTypes.object,
   store: PropTypes.object,
   locale: PropTypes.string,
+}
+
+App.defaultProps = {
+  store: {},
 }
 
 App.childContextTypes = {

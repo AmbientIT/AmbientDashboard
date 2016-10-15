@@ -34,7 +34,6 @@ export default (router) => {
           </App>
         </AppContainer>
       )
-      console.log('initialState', initialState)
 
       ctx.body = `<!doctype html>\n${renderToStaticMarkup(
         <Html

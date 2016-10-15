@@ -15,7 +15,6 @@ export class NoteForm extends Component {
 
   state = {
     canSubmit: false,
-    DateTimeFormat: global.Intl.DateTimeFormat,
     files: [],
   }
 
@@ -72,7 +71,7 @@ export class NoteForm extends Component {
               value={note.date}
               floatingLabelText="Date"
               locale={this.context.locale}
-              DateTimeFormat={this.state.DateTimeFormat}
+              DateTimeFormat={Intl.DateTimeFormat}
               okLabel="OK"
               cancelLabel="Annuler"
               locale="fr"
