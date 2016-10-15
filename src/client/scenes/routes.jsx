@@ -9,49 +9,16 @@ import NoteEdit from './dashboard/note/edit/NoteEdit'
 import NoteCreate from './dashboard/note/create/NoteCreate'
 import { forbiddenIfLoggedIn, requireAuth } from './guards'
 
-export const errorLoading = err => {
-  console.error('Dynamic page loading failed', err)
-}
-
-export const loadRoute = cb => module => cb(null, module.default)
-
 const getRoutes = ({ store, ctx }) => {
   return (
     <Route path="">
-      <Route
-        path="/login"
-        component={Login}
-        onEnter={forbiddenIfLoggedIn(store, ctx)}
-      />
-      <Route
-        path="/"
-        component={Dashboard}
-        onEnter={requireAuth(store, ctx)}
-      >
-        <IndexRoute
-          component={Home}
-        />
-        <Route
-          path="/note"
-          component={Note}
-          // getComponent={(location, cb) => {
-          //   System.import('./dashboard/note/Note').then(loadRoute(cb)).catch(errorLoading)
-          // }}
-        >
-          <IndexRoute
-            component={NoteList}
-            // getComponent={(location, cb) => {
-            //   System.import('./dashboard/note/list/NoteList').then(loadRoute(cb)).catch(errorLoading)
-            // }}
-          />
-          <Route
-            path="/note/edit/:id"
-            component={NoteEdit}
-          />
-          <Route
-            path="/note/create"
-            component={NoteCreate}
-          />
+      <Route path="/login" component={Login} onEnter={forbiddenIfLoggedIn(store, ctx)} />
+      <Route path="/" component={Dashboard} onEnter={requireAuth(store, ctx)}>
+        <IndexRoute component={Home} />
+        <Route path="/note" component={Note}>
+          <IndexRoute component={NoteList} />
+          <Route path="/note/edit/:id" component={NoteEdit} />
+          <Route path="/note/create" component={NoteCreate} />
         </Route>
       </Route>
     </Route>
