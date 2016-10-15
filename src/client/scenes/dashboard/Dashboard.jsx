@@ -12,12 +12,6 @@ import { logout } from '../auth/_actions/auth.actions'
   dispatch => bindActionCreators({ logout }, dispatch)
 )
 export default class Dashboard extends Component {
-  static propTypes = {
-    open: PropTypes.bool,
-    children: PropTypes.node,
-    logout: PropTypes.func,
-  }
-
   static contextTypes = {
     router: PropTypes.object,
   }
@@ -81,4 +75,10 @@ export default class Dashboard extends Component {
       </main>
     )
   }
+}
+
+Dashboard.propTypes = {
+  open: PropTypes.bool,
+  children: PropTypes.node,
+  logout: PropTypes.func,
 }

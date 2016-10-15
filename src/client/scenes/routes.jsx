@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Route, IndexRoute } from 'react-router'
-import Auth from './auth/Auth'
+import Login from './auth/Login'
 import Dashboard from './dashboard/Dashboard'
 import Home from './dashboard/home/Home'
 import Note from './dashboard/note/Note'
@@ -17,10 +17,10 @@ export const loadRoute = cb => module => cb(null, module.default)
 
 const getRoutes = ({ store, ctx }) => {
   return (
-    <Route path="/">
+    <Route path="">
       <Route
         path="/login"
-        component={Auth}
+        component={Login}
         onEnter={forbiddenIfLoggedIn(store, ctx)}
       />
       <Route

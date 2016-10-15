@@ -3,21 +3,6 @@ import { Card, CardActions, CardMedia, CardTitle } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 
 export class FilePreview extends Component {
-  static propTypes = {
-    file: PropTypes.shape({
-      name: PropTypes.string,
-      type: PropTypes.type,
-      url: PropTypes.url,
-    }),
-    uploadFile: PropTypes.func,
-    removeFile: PropTypes.func,
-  }
-
-  static defaultProps = {
-    uploadFile: () => {},
-    removeFile: () => {},
-  }
-
   render() {
     const { file } = this.props
     return (
@@ -35,4 +20,19 @@ export class FilePreview extends Component {
       </Card>
     )
   }
+}
+
+FilePreview.propTypes = {
+  file: PropTypes.shape({
+    name: PropTypes.string,
+    type: PropTypes.type,
+    url: PropTypes.url,
+  }),
+  uploadFile: PropTypes.func,
+  removeFile: PropTypes.func,
+}
+
+FilePreview.defaultProps = {
+  uploadFile: () => {},
+  removeFile: () => {},
 }

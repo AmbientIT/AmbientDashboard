@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { withApollo, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { Link } from 'react-router'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
@@ -13,11 +13,6 @@ const style = {
 
 @graphql(FETCH_NOTES)
 class Note extends Component { //eslint-disable-line
-
-  static propTypes = {
-    children: PropTypes.node,
-  }
-
   render() {
     const { children } = this.props
     return (
@@ -33,4 +28,8 @@ class Note extends Component { //eslint-disable-line
   }
 }
 
-export default withApollo(Note)
+Note.propTypes = {
+  children: PropTypes.node,
+}
+
+export default Note

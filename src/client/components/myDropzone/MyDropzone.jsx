@@ -5,16 +5,6 @@ import Paper from 'material-ui/Paper'
 import FilePreview from '../index'
 
 export class MyDropzone extends Component {
-  static propTypes = {
-    onUpload: PropTypes.func,
-    label: PropTypes.string,
-  }
-
-  static defaultProps = {
-    note: {},
-    onDrop: () => {},
-  }
-
   state = { filesPreview: [] }
 
   onDrop = (files) => {
@@ -48,4 +38,14 @@ export class MyDropzone extends Component {
       </Paper>
     )
   }
+}
+
+MyDropzone.propTypes = {
+  onUpload: PropTypes.func,
+  label: PropTypes.string,
+}
+
+MyDropzone.defaultProps = {
+  note: {},
+  onDrop: () => {},
 }

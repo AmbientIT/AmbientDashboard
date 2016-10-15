@@ -10,19 +10,6 @@ const { string, func } = PropTypes
   dispatch => bindActionCreators({ googleLogin }, dispatch)
 )
 export default class Login extends Component {
-  static propTypes = {
-    googleLogin: func,
-    clientId: string,
-    redirectUri: string,
-    scope: string,
-  }
-
-  static defaultProps = {
-    clientId: process.env.GOOGLEID,
-    redirectUri: process.env.GOOGLEREDIRECTURI,
-    scope: process.env.GOOGLESCOPE,
-  }
-
   static contextTypes = {
     router: React.PropTypes.object,
   }
@@ -42,4 +29,17 @@ export default class Login extends Component {
       <button onClick={this.googleAuthPopup}>Google</button>
     )
   }
+}
+
+Login.propTypes = {
+  googleLogin: func,
+  clientId: string,
+  redirectUri: string,
+  scope: string,
+}
+
+Login.defaultProps = {
+  clientId: process.env.GOOGLEID,
+  redirectUri: process.env.GOOGLEREDIRECTURI,
+  scope: process.env.GOOGLESCOPE,
 }
