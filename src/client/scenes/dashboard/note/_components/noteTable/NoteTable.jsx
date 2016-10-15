@@ -38,11 +38,11 @@ export class NoteTable extends Component {
             </TableHeaderColumn>
           </TableRow>
           <TableRow>
-            <TableHeaderColumn tooltip="Owner">Owner</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Date">Date</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Editer">Edit</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Supprimer">Supprimer</TableHeaderColumn>
+            <TableHeaderColumn>Owner</TableHeaderColumn>
+            <TableHeaderColumn>Name</TableHeaderColumn>
+            <TableHeaderColumn>Date</TableHeaderColumn>
+            <TableHeaderColumn>Edit</TableHeaderColumn>
+            <TableHeaderColumn>Supprimer</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody
@@ -51,22 +51,22 @@ export class NoteTable extends Component {
           showRowHover
           stripedRows
         >
-        {notes.map(({ node }, index) => (
-          <TableRow key={index} selected={node.selected}>
-            <TableRowColumn>{node.owner.email}</TableRowColumn>
-            <TableRowColumn>{node.name}</TableRowColumn>
-            <TableRowColumn>{node.date}</TableRowColumn>
+        {notes.map((note, index) => (
+          <TableRow key={index} selected={note.selected}>
+            <TableRowColumn>{note.owner.email}</TableRowColumn>
+            <TableRowColumn>{note.name}</TableRowColumn>
+            <TableRowColumn>{note.displayDate}</TableRowColumn>
             <TableRowColumn>
               <FlatButton
-                onTouchTap={() => onEdit(node.id)}
-                onMouseOver={() => onPrefetch(node.id)}
+                onTouchTap={() => onEdit(note.id)}
+                onMouseOver={() => onPrefetch(note.id)}
                 icon={<ActionAndroid />}
                 style={{ margin: 12 }}
               />
             </TableRowColumn>
             <TableRowColumn>
               <FlatButton
-                onTouchTap={() => onDelete(node.id)}
+                onTouchTap={() => onDelete(note.id)}
                 icon={<ActionAndroid />}
                 style={{ margin: 12 }}
               />
@@ -79,13 +79,13 @@ export class NoteTable extends Component {
   }
 }
 
-const { shape, arrayOf, string, number, func, date } = PropTypes
+const { shape, arrayOf, string, number, func } = PropTypes
 
 NoteTable.propTypes = {
   notes: arrayOf(shape({
     id: string,
     name: string,
-    date,
+    date: PropTypes.date,
     owner: shape({
       email: string,
       avatar: string,

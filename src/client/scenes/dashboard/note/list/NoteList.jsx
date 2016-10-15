@@ -33,8 +33,12 @@ export default class NoteList extends Component {
     })
   }
 
-  formatDate = inputDate => {
-    return new Intl.DateTimeFormat('en-US').format(new Date(inputDate))
+  formatList = list => {
+    return list.map(({ node }) => {
+      node.displayDate = new Intl.DateTimeFormat(this.context.locale)
+        .format(new Date(node.date))
+      return node
+    })
   }
 
   render() {
@@ -45,7 +49,7 @@ export default class NoteList extends Component {
           return data.loading
             ? 'loading.....'
             : <NoteTable
-              notes={data.viewer.notes.edges}
+              notes={this.formatList(data.viewer.notes.edges)}
               onPrefetch={this.prefetch}
               onEdit={this.goToEditView}
               onDelete={deleteNote}
@@ -54,20 +58,20 @@ export default class NoteList extends Component {
       </section>
     )
   }
+}
 
-  static propTypes = { // eslint-disable-line
-    deleteNote: func,
-    loggedUser: object,
-    client: shape({
-      query: func,
-    }),
-    data: shape({
-      loading: bool,
-      viewer: shape({
-        notes: shape({
-          edges: arrayOf(object),
-        }),
+NoteList.propTypes = {
+  deleteNote: func,
+  loggedUser: object,
+  client: shape({
+    query: func,
+  }),
+  data: shape({
+    loading: bool,
+    viewer: shape({
+      notes: shape({
+        edges: arrayOf(object),
       }),
     }),
-  }
+  }),
 }
