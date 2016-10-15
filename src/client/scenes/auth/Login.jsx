@@ -1,24 +1,29 @@
 import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { googleLogin } from './_actions/auth.actions'
+import GoogleLogin from 'react-google-login'
+import { googleLogin as googleAuth } from './_actions/auth.actions'
 
 const { string, func } = PropTypes
 
 @connect(
   state => state.login ? { isLoading: state.login.isLoading } : {},
-  dispatch => bindActionCreators({ googleLogin }, dispatch)
+  dispatch => bindActionCreators({ googleLogin: googleAuth }, dispatch)
 )
 export default class Login extends Component {
   static contextTypes = {
     router: React.PropTypes.object,
   }
 
-  googleAuthPopup = async () => {
-    const { googleLogin, clientId, redirectUri } = this.props // eslint-disable-line
+  loginFailure = err => {
+    console.error('error login', err)
+  }
+
+  loginHandler = async ({ code }) => {
     try {
-      await googleLogin({ clientId, redirectUri })
-      this.context.router.push('/note')
+      const { googleLogin, clientId, redirectUri } = this.props
+      await googleLogin({ code, clientId, redirectUri })
+      this.context.router.push('/')
     } catch (err) {
       console.error('login error', err)
     }
@@ -26,7 +31,14 @@ export default class Login extends Component {
 
   render() {
     return (
-      <button onClick={this.googleAuthPopup}>Google</button>
+      // <button onClick={this.googleAuthPopup}>Google</button>
+      <GoogleLogin
+        clientId={this.props.clientId}
+        buttonText="Login"
+        onSuccess={this.loginHandler}
+        onFailure={this.loginFailure}
+        offline
+      />
     )
   }
 }
