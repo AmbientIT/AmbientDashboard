@@ -5,10 +5,13 @@ import { createHistory } from 'history'
 import { Router, useRouterHistory } from 'react-router'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 import apolloClient from './store/apollo'
 import configureStore from './store/configureStore'
 import getRoutes from './scenes/routes'
 import App from './App'
+
+injectTapEventPlugin()
 
 const browserHistory = useRouterHistory(createHistory)({
   basename: '/',
@@ -23,7 +26,7 @@ const rootEl = document.getElementById('react-container')
 render(
   <AppContainer>
     <App
-      radiumConfig={{ userAgent: navigator.userAgent }}
+      radiumConfig={{ userAgent: 'all' }}
       apolloClient={apolloClient}
       store={store}
       muiTheme={getMuiTheme(lightBaseTheme)}

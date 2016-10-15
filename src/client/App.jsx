@@ -2,12 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { ApolloProvider } from 'react-apollo'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import radium, { StyleRoot, Style } from 'radium'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import { reset } from './styles'
 
-injectTapEventPlugin()
-
-@radium
+@radium()
 export default class App extends Component {
   getChildContext() {
     return {
