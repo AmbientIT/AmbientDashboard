@@ -6,7 +6,12 @@ import fetch from 'isomorphic-fetch'
 import FormData from 'isomorphic-form-data'
 import { env } from '../_core'
 
-export const createJWT = (user) => {
+const googleUrls = {
+  token: 'https://accounts.google.com/o/oauth2/token',
+  profile: 'https://www.googleapis.com/plus/v1/people/me/openIdConnect',
+}
+
+export const createJWT = user => {
   return jwt.encode({
     sub: user.id,
     iat: moment().unix(),
@@ -14,26 +19,28 @@ export const createJWT = (user) => {
   }, env.token.SECRET)
 }
 
-export const getGoogleToken = (params) => {
-  const formData = new FormData()
+export const getGoogleToken = async params => {
   const fetchBody = Object.assign(params, {
     grant_type: 'authorization_code',
     client_secret: env.google.GOOGLESECRET,
   })
 
-  for (const key in fetchBody) {
+  const formDataReducer = (formData, key) => {
     formData.append(key, fetchBody[key])
+    return formData
   }
 
-  return fetch('https://accounts.google.com/o/oauth2/token', {
+  const response = await fetch(googleUrls.token, {
     method: 'post',
-    body: formData,
-  }).then(response => response.json())
+    body: Object.keys(fetchBody).reduce(formDataReducer, new FormData()),
+  })
+  return response.json()
 }
 
-export const getGoogleProfile = (accessToken) => {
-  return fetch('https://www.googleapis.com/plus/v1/people/me/openIdConnect', {
+export const getGoogleProfile = async accessToken => {
+  const response = await fetch(googleUrls.profile, {
     method: 'GET',
     headers: { Authorization: `Bearer ${accessToken}` },
-  }).then(response => response.json())
+  })
+  return response.json()
 }

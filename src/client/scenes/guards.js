@@ -16,14 +16,10 @@ export const requireAuth = ({ getState, dispatch }, ctx) => async (nextState, re
 export const forbiddenIfLoggedIn = ({ getState, dispatch }, ctx) => async (nextState, replace, callback) => {
   const { auth } = getState()
   const authActions = bindActionCreators({ getLoggedUserAndLogin }, dispatch)
-  console.log('forbidden !!!!!', auth)
   if (auth.loggedUser) {
-    replace('/note')
-  } else {
-    const user = await authActions.getLoggedUserAndLogin(ctx, replace)
-    if (user) {
-      replace('/note')
-    }
+    replace('/')
+  } else if (await authActions.getLoggedUserAndLogin(ctx, replace)) {
+    replace('/')
   }
   callback()
 }

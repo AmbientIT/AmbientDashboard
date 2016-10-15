@@ -5,20 +5,13 @@ export const LOGIN_LOADING = 'LOGIN_LOADING'
 export const LOGIN_ERROR = 'LOGIN_ERROR'
 export const LOGOUT = 'LOGOUT'
 
-const dispatchError = (err, dispatch) => dispatch({
-  type: LOGIN_ERROR,
-  payload: err,
-})
-
 export const googleLogin = ({ code, clientId, redirectUri }) => async dispatch => {
   dispatch({ type: LOGIN_LOADING })
   try {
-    dispatch({
-      type: LOGIN_FINISH,
-      payload: await fetchGoogleAuth({ code, clientId, redirectUri }),
-    })
+    const payload = await fetchGoogleAuth({ code, clientId, redirectUri })
+    dispatch({ type: LOGIN_FINISH, payload })
   } catch (err) {
-    dispatchError(err, dispatch)
+    dispatch({ type: LOGIN_ERROR, payload: err })
   }
 }
 
@@ -27,16 +20,12 @@ export const getLoggedUserAndLogin = (ctx) => async dispatch => {
   try {
     dispatch({ type: LOGIN_LOADING })
     user = await fetchLoggedUser(ctx)
-    if (user) {
-      dispatch({
-        type: LOGIN_FINISH,
-        payload: { user },
-      })
-    } else {
-      dispatchError(new Error('no token'), dispatch)
-    }
+    dispatch({
+      type: user ? LOGIN_FINISH : LOGIN_ERROR,
+      payload: user ? { user } : new Error('no token'),
+    })
   } catch (err) {
-    dispatchError(err, dispatch)
+    dispatch({ type: LOGIN_ERROR, payload: err })
   }
   return user
 }

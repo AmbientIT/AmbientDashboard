@@ -31,7 +31,6 @@ export default class Login extends Component {
 
   render() {
     return (
-      // <button onClick={this.googleAuthPopup}>Google</button>
       <GoogleLogin
         clientId={this.props.clientId}
         buttonText="Login"
