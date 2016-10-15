@@ -1,5 +1,3 @@
-/* eslint guard-for-in:0 */
-/* eslint no-restricted-syntax:0 */
 import jwt from 'jwt-simple'
 import moment from 'moment'
 import fetch from 'isomorphic-fetch'

@@ -5,18 +5,14 @@ export default {
     marginTop: 0,
     width: '100%',
   },
-  submit: {
+  inputContainer: {
     width: '100%',
+    margin: 'auto',
     [mediaQueries.md]: {
       width: '80%',
     },
   },
   input: {
     width: '100%',
-    margin: 'auto',
-    [mediaQueries.md]: {
-      color: 'red',
-      width: '80% !important',
-    },
   },
 }

@@ -39,7 +39,6 @@ export class NoteForm extends Component {
   }
 
   render() {
-    console.log(this.context.locale)
     const { wordsError } = this.errorMessages
     const { note, submitForm } = this.props
     return (
@@ -51,7 +50,7 @@ export class NoteForm extends Component {
           onInvalidSubmit={this.notifyFormError}
           style={style.form}
         >
-          <div style={style.input}>
+          <div style={style.inputContainer}>
             <FormsyText
               style={style.input}
               name="name"
@@ -63,7 +62,7 @@ export class NoteForm extends Component {
               floatingLabelText="Titre"
             />
           </div>
-          <div>
+          <div style={style.inputContainer}>
             <FormsyDate
               style={style.input}
               name="date"
@@ -74,12 +73,11 @@ export class NoteForm extends Component {
               DateTimeFormat={Intl.DateTimeFormat}
               okLabel="OK"
               cancelLabel="Annuler"
-              locale="fr"
             />
           </div>
-          <div>
+          <div style={style.inputContainer}>
             <RaisedButton
-              style={style.submit}
+              style={style.input}
               type="submit"
               label="Submit"
               disabled={!this.state.canSubmit}
@@ -103,7 +101,3 @@ NoteForm.defaultProps = {
   note: {},
   submitForm: () => {},
 }
-
-// export const NoteForm = radium(NoteFormClass)
-
-// todo remove this when radium server rendering issue is fixed
