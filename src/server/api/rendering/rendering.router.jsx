@@ -5,10 +5,9 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import { RouterContext } from 'react-router'
+import { _match, getLocale, getApolloClient, Html } from './lib'
 import getRoutes from '../.././../client/scenes/routes'
-import { _match, getLocale, getApolloClient } from './lib'
 import configureStore from '../../../client/store/configureStore'
-import Html from './components/Html'
 import App from '../../../client/App'
 
 export default (router) => {

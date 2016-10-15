@@ -31,10 +31,6 @@ App.propTypes = {
   locale: PropTypes.string,
 }
 
-App.defaultProps = {
-  store: {},
-}
-
 App.childContextTypes = {
   locale: PropTypes.string.isRequired,
 }

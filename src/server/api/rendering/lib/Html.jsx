@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import serialize from 'serialize-javascript'
 import { getGlobalCss } from '../lib'
 
-export default class Html extends Component {
+export class Html extends Component {
   render() {
     const { markup, initialState, apolloState, locale } = this.props
     console.log('apolloState', apolloState)
