@@ -29,7 +29,6 @@ export default class NoteEdit extends Component {
   renderForm() {
     const { data: { note }, onUpload } = this.props
     note.date = new Date(note.date)
-    console.log(note.attachements)
     return (
       <section>
         <NoteForm note={note} submitForm={this.props.submitForm} />
@@ -50,15 +49,7 @@ export default class NoteEdit extends Component {
   }
 }
 
-const {
-  shape,
-  arrayOf,
-  string,
-  number,
-  func,
-  date,
-  bool,
-} = PropTypes
+const { shape, arrayOf, string, number, func, date, bool } = PropTypes
 
 NoteEdit.propTypes = {
   data: shape({

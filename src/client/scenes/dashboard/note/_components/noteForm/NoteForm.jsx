@@ -6,14 +6,13 @@ import Paper from 'material-ui/Paper'
 import radium from 'radium'
 import style from './noteForm.style'
 
-const {
-  shape,
-  string,
-  instanceOf,
-  func,
-} = PropTypes
+const { shape, string, instanceOf, func } = PropTypes
 @radium()
 export class NoteForm extends Component {
+  static contextTypes = {
+    locale: string,
+  }
+
   state = {
     canSubmit: false,
     DateTimeFormat: global.Intl.DateTimeFormat,
@@ -41,7 +40,7 @@ export class NoteForm extends Component {
   }
 
   render() {
-    console.log('tru lalalala :    ', global.Intl.DateTimeFormat)
+    console.log(this.context.locale)
     const { wordsError } = this.errorMessages
     const { note, submitForm } = this.props
     return (
@@ -72,7 +71,7 @@ export class NoteForm extends Component {
               required
               value={note.date}
               floatingLabelText="Date"
-              locale=""
+              locale={this.context.locale}
               DateTimeFormat={this.state.DateTimeFormat}
               okLabel="OK"
               cancelLabel="Annuler"

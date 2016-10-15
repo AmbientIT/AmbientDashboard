@@ -1,16 +1,42 @@
 import React from 'react'
 import { AppContainer } from 'react-hot-loader'
 import { render } from 'react-dom'
+import { createHistory } from 'history'
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import { Router, useRouterHistory } from 'react-router'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import apolloClient from './store/apollo'
+import configureStore from './store/configureStore'
+import getRoutes from './scenes/routes'
 import App from './App'
 
 injectTapEventPlugin()
 
-const rootEl = window.document.getElementById('react-container')
+const browserHistory = useRouterHistory(createHistory)({
+  basename: '/',
+})
+
+const store = configureStore(window.INITIAL_STATE)
+
+const routes = getRoutes({ store })
+
+const rootEl = document.getElementById('react-container')
 
 render(
   <AppContainer>
-    <App radiumConfig={{ userAgent: navigator.userAgent }} />
+    <App
+      radiumConfig={{ userAgent: navigator.userAgent }}
+      apolloClient={apolloClient}
+      store={store}
+      muiTheme={getMuiTheme(lightBaseTheme)}
+      locale={navigator.language}
+    >
+      <Router
+        history={browserHistory}
+        routes={routes}
+      />
+    </App>
   </AppContainer>,
   rootEl
 )

@@ -1,34 +1,37 @@
-import React from 'react'
-import { Router, useRouterHistory } from 'react-router'
+import React, { Component, PropTypes } from 'react'
 import { ApolloProvider } from 'react-apollo'
-import { createHistory } from 'history'
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { StyleRoot } from 'radium'
-import apolloClient from './store/apollo'
-import configureStore from './store/configureStore'
-import getRoutes from './scenes/routes'
 
-const store = configureStore(window.INITIAL_STATE)
 
-const browserHistory = useRouterHistory(createHistory)({
-  basename: '/',
-})
+export default class App extends Component {
+  getChildContext() {
+    return {
+      locale: this.props.locale,
+    }
+  }
+  render() {
+    const { children, muiTheme, apolloClient, store } = this.props
+    return (
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <StyleRoot>
+          <ApolloProvider client={apolloClient} store={store}>
+            {children}
+          </ApolloProvider>
+        </StyleRoot>
+      </MuiThemeProvider>
+    )
+  }
+}
 
-const routes = getRoutes({ store })
+App.propTypes = {
+  children: PropTypes.node,
+  muiTheme: PropTypes.object,
+  apolloClient: PropTypes.object,
+  store: PropTypes.object,
+  locale: PropTypes.string,
+}
 
-export default () => {
-  return (
-    <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-      <StyleRoot>
-        <ApolloProvider client={apolloClient} store={store}>
-          <Router
-            history={browserHistory}
-            routes={routes}
-          />
-        </ApolloProvider>
-      </StyleRoot>
-    </MuiThemeProvider>
-  )
+App.childContextTypes = {
+  locale: PropTypes.string.isRequired,
 }

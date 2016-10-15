@@ -15,6 +15,13 @@ const { shape, arrayOf, func, bool, object } = PropTypes
 })
 @withApollo
 export default class NoteList extends Component {
+  static contextTypes = {
+    router: shape({
+      push: func,
+    }),
+    locale: PropTypes.string,
+  }
+
   goToEditView = id => {
     this.context.router.push(`/note/edit/${id}`)
   }
@@ -32,7 +39,6 @@ export default class NoteList extends Component {
 
   render() {
     const { data, deleteNote } = this.props
-    console.log('loading?', data)
     return (
       <section>
         {(() => {
@@ -62,12 +68,6 @@ export default class NoteList extends Component {
           edges: arrayOf(object),
         }),
       }),
-    }),
-  }
-
-  static contextTypes = {
-    router: shape({
-      push: func,
     }),
   }
 }
