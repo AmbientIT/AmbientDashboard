@@ -1,12 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import { ApolloProvider } from 'react-apollo'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import { StyleRoot } from 'radium'
+import radium, { StyleRoot, Style } from 'radium'
+import injectTapEventPlugin from 'react-tap-event-plugin'
+import { reset } from './styles'
 
+injectTapEventPlugin()
+
+@radium
 export default class App extends Component {
   getChildContext() {
     return {
       locale: this.props.locale,
+      _radiumConfig: this.props.radiumConfig,
     }
   }
   render() {
@@ -14,6 +20,7 @@ export default class App extends Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <StyleRoot>
+          <Style rules={reset} />
           <ApolloProvider client={apolloClient} store={store}>
             {children}
           </ApolloProvider>
@@ -29,8 +36,10 @@ App.propTypes = {
   apolloClient: PropTypes.object,
   store: PropTypes.object,
   locale: PropTypes.string,
+  radiumConfig: PropTypes.object,
 }
 
 App.childContextTypes = {
   locale: PropTypes.string.isRequired,
+  _radiumConfig: PropTypes.object.isRequired,
 }

@@ -2,7 +2,6 @@ import React from 'react'
 import { AppContainer } from 'react-hot-loader'
 import { render } from 'react-dom'
 import { createHistory } from 'history'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import { Router, useRouterHistory } from 'react-router'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -10,8 +9,6 @@ import apolloClient from './store/apollo'
 import configureStore from './store/configureStore'
 import getRoutes from './scenes/routes'
 import App from './App'
-
-injectTapEventPlugin()
 
 const browserHistory = useRouterHistory(createHistory)({
   basename: '/',

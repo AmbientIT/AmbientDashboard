@@ -5,7 +5,6 @@ import { getGlobalCss } from '../lib'
 export class Html extends Component {
   render() {
     const { markup, initialState, apolloState, locale } = this.props
-    console.log('apolloState', apolloState)
     const initialStateScript = `
       window.APOLLO_STATE=${serialize(apolloState)};
       window.INITIAL_STATE=${serialize(Object.assign(initialState, apolloState))};
