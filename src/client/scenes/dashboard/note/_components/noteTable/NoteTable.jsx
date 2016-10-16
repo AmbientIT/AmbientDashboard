@@ -34,17 +34,17 @@ export class NoteTable extends Component {
           <TableRow>
             <TableHeaderColumn
               colSpan="5"
-              style={style.header}
+              style={style.tableCell}
             >
               Notes de frais
             </TableHeaderColumn>
           </TableRow>
           <TableRow>
-            <TableHeaderColumn>Owner</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Date</TableHeaderColumn>
-            <TableHeaderColumn>Edit</TableHeaderColumn>
-            <TableHeaderColumn>Supprimer</TableHeaderColumn>
+            <TableHeaderColumn style={style.tableCell}>Owner</TableHeaderColumn>
+            <TableHeaderColumn style={style.tableCell}>Name</TableHeaderColumn>
+            <TableHeaderColumn style={style.tableCell}>Date</TableHeaderColumn>
+            <TableHeaderColumn style={style.tableCell}>Edit</TableHeaderColumn>
+            <TableHeaderColumn style={style.tableCell}>Supprimer</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody
@@ -55,10 +55,10 @@ export class NoteTable extends Component {
         >
           {notes.map((note, index) => (
             <TableRow key={index} selected={note.selected}>
-              <TableRowColumn>{note.owner.firstName}</TableRowColumn>
-              <TableRowColumn>{note.name}</TableRowColumn>
-              <TableRowColumn>{note.displayDate}</TableRowColumn>
-              <TableRowColumn>
+              <TableRowColumn style={style.tableCell}>{note.owner.firstName}</TableRowColumn>
+              <TableRowColumn style={style.tableCell}>{note.name}</TableRowColumn>
+              <TableRowColumn style={style.tableCell}>{note.displayDate}</TableRowColumn>
+              <TableRowColumn style={style.tableCell}>
                 <FlatButton
                   onTouchTap={() => onEdit(note.id)}
                   onMouseOver={() => onPrefetch(note.id)}
@@ -66,7 +66,7 @@ export class NoteTable extends Component {
                   style={{ margin: 12 }}
                 />
               </TableRowColumn>
-              <TableRowColumn>
+              <TableRowColumn style={style.tableCell}>
                 <FlatButton
                   onTouchTap={() => onDelete(note.id)}
                   icon={<ActionAndroid />}

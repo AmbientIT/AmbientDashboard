@@ -1,5 +1,5 @@
 export default {
-  header: {
+  tableCell: {
     textAlign: 'center',
   },
 }
