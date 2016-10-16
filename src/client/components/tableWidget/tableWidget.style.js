@@ -1,8 +1,8 @@
 export default {
-  tableCell: {
+  header: {
     textAlign: 'center',
   },
-  button: {
-    margin: 12,
+  loadMore: {
+    width: '80%',
   },
 }

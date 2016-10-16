@@ -1,11 +1,12 @@
 import gql from 'graphql-tag'
 
 export const FETCH_NOTES = gql`
-  query getNotes{
+  query getNotes($cursor:String) {
     viewer{
-      notes(first:10){
+      notes(first:3 after:$cursor){
         count
         edges{
+          cursor
           node{
             id
             name
@@ -27,6 +28,17 @@ export const FETCH_NOTES = gql`
   }
 `
 
+export const updateAfterFetchMore = (previousResult, { fetchMoreResult }) => {
+  return Object.assign(previousResult, {
+    viewer: {
+      notes: {
+        count: previousResult.viewer.notes.count,
+        edges: [...previousResult.viewer.notes.edges, ...fetchMoreResult.data.viewer.notes.edges],
+      },
+    },
+  })
+}
+
 export const FETCH_NOTE = gql`
   query getNote($id: ID!){
     note(id: $id){
@@ -44,60 +56,6 @@ export const FETCH_NOTE = gql`
           }
         }
       }
-    }
-  }
-`
-
-export const CREATE_NOTE = gql`
-  mutation addNote($name: String!, $date: Date!, $owner: ID!){
-    addNote(input:{name: $name, date: $date, owner: $owner, clientMutationId: "1"}){
-      changedNoteEdge{
-        node{
-          id
-          name
-          date
-          owner{
-            id
-            firstName
-            lastName
-            email
-            avatar
-          }
-          attachements{
-            count
-          }
-        }
-      }
-    }
-  }
-`
-
-export const UPDATE_NOTE = gql`
-  mutation updateNote($name: String!, $date: Date!, $id: ID!){
-    updateNote(input:{id: $id, name: $name, date: $date, clientMutationId: "2"}){
-      changedNote{
-        id
-        name
-        date
-        owner{
-          id
-          firstName
-          lastName
-          email
-          avatar
-        }
-        attachements{
-          count
-        }
-      }
-    }
-  }
-`
-
-export const DELETE_NOTE = gql`
-  mutation deleteNote($id: ID!){
-    deleteNote(input: {id: $id, clientMutationId: "3"}){
-      ok
     }
   }
 `

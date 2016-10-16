@@ -21,7 +21,6 @@ export default (state = initialState, action) => {
       return Object.assign(state, { isLoading: true })
     case LOGIN_ERROR :
       return Object.assign(state, { isLoading: false })
-
     case LOGOUT :
       jsCookie.remove('token')
       localStorage.removeItem('token')

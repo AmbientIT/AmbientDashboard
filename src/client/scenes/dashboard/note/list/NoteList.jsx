@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql, withApollo } from 'react-apollo'
 import { NoteTable } from '../_components'
-import { FETCH_NOTES, FETCH_NOTE, DELETE_NOTE, deleteNoteMutation } from '../_graphql'
+import { FETCH_NOTES, FETCH_NOTE, DELETE_NOTE, deleteNoteMutation, updateAfterFetchMore } from '../_graphql'
 
-const { shape, arrayOf, func, bool, object } = PropTypes
 
 @graphql(FETCH_NOTES)
 @graphql(DELETE_NOTE, {
@@ -14,10 +13,9 @@ const { shape, arrayOf, func, bool, object } = PropTypes
 @withApollo
 export default class NoteList extends Component {
   static contextTypes = {
-    router: shape({
-      push: func,
+    router: PropTypes.shape({
+      push: PropTypes.func,
     }),
-    locale: PropTypes.string,
   }
 
   goToEditView = id => {
@@ -31,45 +29,34 @@ export default class NoteList extends Component {
     })
   }
 
-  formatList = list => {
-    return list.map(({ node }) => {
-      const displayDate = new Intl.DateTimeFormat(this.context.locale)
-        .format(new Date(node.date))
-      return Object.assign({ displayDate }, node)
+  fetchMore = cursor => {
+    this.props.data.fetchMore({
+      query: FETCH_NOTES,
+      variables: { cursor },
+      updateQuery: updateAfterFetchMore,
     })
   }
 
   render() {
-    const { data, deleteNote } = this.props
-    console.log(data)
     return (
-      <section>
-        {(() => {
-          return data.loading
-            ? 'loading.....'
-            : <NoteTable
-              notes={this.formatList(data.viewer.notes.edges)}
-              onPrefetch={this.prefetch}
-              onEdit={this.goToEditView}
-              onDelete={deleteNote}
-            />
-        })()}
-      </section>
+      <NoteTable
+        title="Notes de Frais"
+        apolloData={this.props.data}
+        fetchMore={this.fetchMore}
+        onPrefetch={this.prefetch}
+        onEdit={this.goToEditView}
+        onDelete={this.props.deleteNote}
+      />
     )
   }
 }
 
 NoteList.propTypes = {
-  deleteNote: func,
-  client: shape({
-    query: func,
+  deleteNote: PropTypes.func,
+  client: PropTypes.shape({
+    query: PropTypes.func,
   }),
-  data: shape({
-    loading: bool,
-    viewer: shape({
-      notes: shape({
-        edges: arrayOf(object),
-      }),
-    }),
+  data: PropTypes.shape({
+    fetchMore: PropTypes.func,
   }),
 }

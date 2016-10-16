@@ -12,7 +12,7 @@ const style = {
 }
 
 @graphql(FETCH_NOTES)
-class Note extends Component { //eslint-disable-line
+class Note extends Component {
   render() {
     const { children } = this.props
     return (
