@@ -12,7 +12,7 @@ import { CREATE_NOTE, createNoteMutation } from '../_graphql'
     createNote: createNoteMutation(data),
   }),
 })
-export default class NoteCreate extends Component { //eslint-disable-line
+export default class NoteCreate extends Component {
   render() {
     return <NoteForm submitForm={this.props.createNote} />
   }
