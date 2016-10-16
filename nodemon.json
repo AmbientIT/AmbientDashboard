@@ -1,5 +1,8 @@
 {
   "execMap": {
     "js": "babel-node"
-  }
+  },
+  "verbose": true,
+  "ignore": ["test/*", "src/client/*", "webpack/*"],
+  "delay": "2500"
 }

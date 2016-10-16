@@ -1,0 +1,6 @@
+{
+  "webport": 8080,
+  "debugport": 5858,
+  "edit": true,
+  "break": false
+}

@@ -1,6 +1,6 @@
 const webpackMerge = require('webpack-merge')
 const { DefinePlugin } = require('webpack')
-const { HOST, PORT, google } = require('../../server/_core').env
+const { HOST, PORT, google } = require('../src/server/_core').env
 const ENV = require('yargs').argv.env || 'development'
 
 module.exports = webpackMerge.smart(require(`./${ENV}`), { //eslint-disable-line

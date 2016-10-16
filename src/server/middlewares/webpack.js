@@ -3,7 +3,7 @@ import convert from 'koa-convert'
 import compose from 'koa-compose'
 import webpackDev from 'koa-webpack-dev-middleware'
 import webpackHot from 'koa-webpack-hot-middleware'
-import webpackConfig from '../../client/_webpack/common'
+import webpackConfig from '../../../webpack/common'
 
 const compiler = webpack(webpackConfig)
 

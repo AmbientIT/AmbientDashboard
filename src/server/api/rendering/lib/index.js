@@ -1,6 +1,5 @@
 import { match } from 'react-router'
 import { Locales } from 'locale'
-import fs from 'fs'
 import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import { env } from '../../../_core'
 
@@ -27,9 +26,6 @@ export const getApolloClient = ({ headers }) => {
   })
 }
 
-export const getGlobalCss = () => {
-  return fs.readFileSync(`${process.cwd()}/node_modules/normalize.css/normalize.css`, { encoding: 'utf8' })
-}
 
 export const getLocale = headers => {
   const locales = new Locales(headers['accept-language'])
