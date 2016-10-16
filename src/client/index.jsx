@@ -47,7 +47,12 @@ if (module.hot) {
 
     render(
       <AppContainer>
-        <NextApp />
+        <NextApp>
+          <Router
+            history={browserHistory}
+            routes={routes}
+          />
+        </NextApp>
       </AppContainer>
       , rootEl
     )
