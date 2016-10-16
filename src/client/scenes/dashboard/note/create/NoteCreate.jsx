@@ -8,7 +8,9 @@ import { CREATE_NOTE, createNoteMutation } from '../_graphql'
   state => state.auth ? { loggedUser: state.auth.loggedUser } : {},
 )
 @graphql(CREATE_NOTE, {
-  props: createNoteMutation,
+  props: data => ({
+    createNote: createNoteMutation(data),
+  }),
 })
 export default class NoteCreate extends Component { //eslint-disable-line
   render() {

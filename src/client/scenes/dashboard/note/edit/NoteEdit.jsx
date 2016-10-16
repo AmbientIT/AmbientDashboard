@@ -14,7 +14,13 @@ import { MyDropzone } from '../../../../components'
 @graphql(FETCH_NOTE, {
   options: ({ routeParams: { id } }) => ({ variables: { id } }),
 })
-@graphql(UPDATE_NOTE, { props: updateNoteMutation })
+@graphql(UPDATE_NOTE,
+  {
+    props: data => ({
+      updateNote: updateNoteMutation(data),
+    }),
+  }
+)
 export default class NoteEdit extends Component {
   dropzoneLabel = 'drop some file here'
 
@@ -31,7 +37,7 @@ export default class NoteEdit extends Component {
     note.date = new Date(note.date)
     return (
       <section>
-        <NoteForm note={note} submitForm={this.props.submitForm} />
+        <NoteForm note={note} submitForm={this.props.updateNote} />
         <Attachements
           attachements={note.attachements.edges}
           onRemoveAttachement={this.removeAttachementHandler}
@@ -69,6 +75,6 @@ NoteEdit.propTypes = {
       }),
     }),
   }),
-  submitForm: func,
+  updateNote: func,
   onUpload: func,
 }
