@@ -10,6 +10,8 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table'
+import style from './noteTable.style'
+
 
 @radium()
 export class NoteTable extends Component {
@@ -31,8 +33,8 @@ export class NoteTable extends Component {
         >
           <TableRow>
             <TableHeaderColumn
-              colSpan="6"
-              style={{ textAlign: 'center' }}
+              colSpan="5"
+              style={style.header}
             >
               Notes de frais
             </TableHeaderColumn>

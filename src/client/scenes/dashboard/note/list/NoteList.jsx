@@ -39,6 +39,7 @@ export default class NoteList extends Component {
 
   render() {
     const { data, deleteNote } = this.props
+    console.log(data)
     return (
       <section>
         {(() => {
