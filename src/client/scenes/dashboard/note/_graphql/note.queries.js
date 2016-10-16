@@ -58,7 +58,8 @@ export const CREATE_NOTE = gql`
           date
           owner{
             id
-            username
+            firstName
+            lastName
             email
             avatar
           }
@@ -80,7 +81,8 @@ export const UPDATE_NOTE = gql`
         date
         owner{
           id
-          username
+          firstName
+          lastName
           email
           avatar
         }

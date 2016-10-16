@@ -7,7 +7,9 @@ const { shape, arrayOf, func, bool, object } = PropTypes
 
 @graphql(FETCH_NOTES)
 @graphql(DELETE_NOTE, {
-  props: deleteNoteMutation,
+  props: data => ({
+    deleteNote: deleteNoteMutation(data),
+  }),
 })
 @withApollo
 export default class NoteList extends Component {

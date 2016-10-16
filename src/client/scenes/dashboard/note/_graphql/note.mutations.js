@@ -33,19 +33,11 @@ export const createNoteMutation = ({ mutate, ownProps }) => ({
         }),
         updateQueries: {
           getNotes: (prev, { mutationResult: { data: { addNote: { changedNoteEdge } } } }) => {
-            return prev.viewer
-              ? Object.assign(prev, {
-                viewer: {
-                  notes: {
-                    edges: [...prev.viewer.notes.edges, changedNoteEdge],
-                  },
-                },
-              })
-              : prev
+            prev.viewer.notes.edges = [...prev.viewer.notes.edges, changedNoteEdge]
+            return prev
           },
         },
       })
-
       const { changedNoteEdge: { node } } = addNote
 
       ownProps.history.push(`/note/edit/${node.id}`)
@@ -55,24 +47,23 @@ export const createNoteMutation = ({ mutate, ownProps }) => ({
   },
 })
 
-export const deleteNoteMutation = ({ mutate }) => ({
-  deleteNote: async id => {
-    try {
-      await mutate({
-        variables: { id },
-        updateQueries: {
-          getNotes: (prev, { mutationResult }) => {
-            if (mutationResult.data.deleteNote.ok) {
-              const { notes } = prev.viewer
 
-              notes.edges = notes.edges.filter(({ node }) => node.id !== id)
-            }
-            return prev
-          },
+export const deleteNoteMutation = ({ mutate }) => async id => {
+  try {
+    await mutate({
+      variables: { id },
+      updateQueries: {
+        getNotes: (prev, { mutationResult }) => {
+          if (mutationResult.data.deleteNote.ok) {
+            const { notes } = prev.viewer
+
+            notes.edges = notes.edges.filter(({ node }) => node.id !== id)
+          }
+          return prev
         },
-      })
-    } catch (err) {
-      console.error('remove error', err)
-    }
-  },
-})
+      },
+    })
+  } catch (err) {
+    console.error('remove error', err)
+  }
+}
