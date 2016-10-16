@@ -3,23 +3,22 @@ const { DefinePlugin } = require('webpack')
 const { HOST, PORT, google } = require('../../server/_core').env
 const ENV = require('yargs').argv.env || 'development'
 
-module.exports = webpackMerge.smart(require(`./${ENV}`), {
+module.exports = webpackMerge.smart(require(`./${ENV}`), { //eslint-disable-line
   resolve: {
-    extensions: ['', '.jsx', '.js', '.json'],
+    extensions: ['.jsx', '.js', '.json'],
     modules: [
       `${process.cwd()}/src/client`,
       `${process.cwd()}/node_modules`,
     ],
   },
   module: {
-    preLoaders: [
+    rules: [
       {
+        enforce: 'pre',
         test: /\.jsx|.js$/,
         loaders: ['eslint-loader', 'source-map-loader'],
         exclude: /node_modules/,
       },
-    ],
-    loaders: [
       {
         test: /\.jsx|.js$/,
         exclude: /node_modules/,
@@ -39,10 +38,6 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
       {
         test: /\.json$/,
         loader: 'json-loader',
-      },
-      {
-        test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(gif|png|jpe?g)$/i,
@@ -70,15 +65,4 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), {
       },
     }),
   ],
-  postcss(webpack) {
-    return [
-      require('stylelint')({ }),
-      require('precss')(),
-      require('postcss-import')({ addDependencyTo: webpack }),
-      require('postcss-url')(),
-      require('postcss-cssnext')(),
-      require('postcss-browser-reporter')(),
-      require('postcss-reporter')(),
-    ]
-  },
 })

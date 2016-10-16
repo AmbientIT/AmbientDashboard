@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react'
 import serialize from 'serialize-javascript'
-import { getGlobalCss } from '../lib'
 
 export class Html extends Component {
   render() {
@@ -16,9 +15,6 @@ export class Html extends Component {
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <title>Ambient</title>
-          <style>
-            { getGlobalCss() }
-          </style>
           {/* <link rel="shortcut icon" href={icon} /> */}
         </head>
         <body>
@@ -32,9 +28,8 @@ export class Html extends Component {
 }
 
 Html.propTypes = {
-  assets: PropTypes.object,
-  initialState: PropTypes.object,
-  apolloState: PropTypes.object,
+  initialState: PropTypes.shape(),
+  apolloState: PropTypes.shape(),
   markup: PropTypes.string,
   locale: PropTypes.string,
 }

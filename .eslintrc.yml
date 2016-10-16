@@ -8,17 +8,20 @@ rules:
   - error
   - never
   arrow-body-style: 0
-  global-require: 0
+  arrow-parens: 0
+  no-confusing-arrow: 0
   no-console: 0
-  no-param-reassign: 0
   no-extra-boolean-cast: 0
+  no-underscore-dangle: 0
+  no-param-reassign: 0
   max-len:
   - error
   - 160
-  no-confusing-arrow: 0
+  global-require: 0
+  import/no-dynamic-require: 0
   import/no-extraneous-dependencies:
   - error
   - devDependencies: true
   import/prefer-default-export: 0
-  no-underscore-dangle: 0
   react/prefer-stateless-function: 0
+  react/no-danger: 0

@@ -51,28 +51,28 @@ export class NoteTable extends Component {
           showRowHover
           stripedRows
         >
-        {notes.map((note, index) => (
-          <TableRow key={index} selected={note.selected}>
-            <TableRowColumn>{note.owner.email}</TableRowColumn>
-            <TableRowColumn>{note.name}</TableRowColumn>
-            <TableRowColumn>{note.displayDate}</TableRowColumn>
-            <TableRowColumn>
-              <FlatButton
-                onTouchTap={() => onEdit(note.id)}
-                onMouseOver={() => onPrefetch(note.id)}
-                icon={<ActionAndroid />}
-                style={{ margin: 12 }}
-              />
-            </TableRowColumn>
-            <TableRowColumn>
-              <FlatButton
-                onTouchTap={() => onDelete(note.id)}
-                icon={<ActionAndroid />}
-                style={{ margin: 12 }}
-              />
-            </TableRowColumn>
-          </TableRow>
-        ))}
+          {notes.map((note, index) => (
+            <TableRow key={index} selected={note.selected}>
+              <TableRowColumn>{note.owner.email}</TableRowColumn>
+              <TableRowColumn>{note.name}</TableRowColumn>
+              <TableRowColumn>{note.displayDate}</TableRowColumn>
+              <TableRowColumn>
+                <FlatButton
+                  onTouchTap={() => onEdit(note.id)}
+                  onMouseOver={() => onPrefetch(note.id)}
+                  icon={<ActionAndroid />}
+                  style={{ margin: 12 }}
+                />
+              </TableRowColumn>
+              <TableRowColumn>
+                <FlatButton
+                  onTouchTap={() => onDelete(note.id)}
+                  icon={<ActionAndroid />}
+                  style={{ margin: 12 }}
+                />
+              </TableRowColumn>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     )

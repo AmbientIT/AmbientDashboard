@@ -1,4 +1,3 @@
-// const path = require('path')
 const {
   LoaderOptionsPlugin,
   NoErrorsPlugin,
@@ -8,25 +7,16 @@ const {
     UglifyJsPlugin,
   },
 } = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
-    main: './src/platform/browser/index.jsx',
+    main: `${process.cwd()}/src/client/index.jsx`,
   },
   output: {
     path: 'dist',
     filename: '[name].[hash].bundle.js',
     sourceMapFilename: '[name].[hash].map',
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.ejs$/,
-        loader: 'ejs-loader?variable=data',
-      },
-    ],
   },
   plugins: [
     new LoaderOptionsPlugin({
@@ -43,12 +33,8 @@ module.exports = {
       },
       comments: false,
     }),
-    new HtmlWebpackPlugin({
-      template: 'views/index.html',
-      inject: 'body',
-    }),
     new CopyWebpackPlugin([{
-      from: 'src/assets',
+      from: 'src/public',
       to: '',
     }]),
   ],

@@ -4,18 +4,17 @@ import FlatButton from 'material-ui/FlatButton'
 
 export class FilePreview extends Component {
   render() {
-    const { file } = this.props
     return (
       <Card className="filepreview">
         <CardMedia
           overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
         >
-          <img src={file.url || file.preview} alt={file.name} width="100px" />
+          <img src={this.props.file.url} alt={this.props.file.name} width="100px" />
         </CardMedia>
-        <CardTitle className="filepreview-title" title={file.name} subtitle={file.type} />
+        <CardTitle className="filepreview-title" title={this.props.file.name} subtitle={this.props.file.type} />
         <CardActions>
-          <FlatButton label="Upload" onTouchTap={() => this.props.uploadFile(file)} />
-          <FlatButton label="Remove" onTouchTap={() => this.props.removeFile(file)} />
+          <FlatButton label="Upload" onTouchTap={() => this.props.uploadFile(this.props.file)} />
+          <FlatButton label="Remove" onTouchTap={() => this.props.removeFile(this.props.file)} />
         </CardActions>
       </Card>
     )

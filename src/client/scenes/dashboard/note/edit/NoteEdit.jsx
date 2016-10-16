@@ -22,7 +22,7 @@ export default class NoteEdit extends Component {
     console.log('remove attachements', id)
   }
 
-  renderLoader() {
+  renderLoader = () => {
     return <div>loading...</div>
   }
 

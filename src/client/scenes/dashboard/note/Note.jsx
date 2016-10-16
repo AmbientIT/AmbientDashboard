@@ -17,7 +17,7 @@ class Note extends Component { //eslint-disable-line
     const { children } = this.props
     return (
       <div>
-        <Link	to="/note/create" style={style}>
+        <Link to="/note/create" style={style}>
           <FloatingActionButton>
             <ContentAdd />
           </FloatingActionButton>

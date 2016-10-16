@@ -5,7 +5,7 @@ import { env, logger } from '../server/_core'
 Intl.NumberFormat = IntlPolyfill.NumberFormat
 Intl.DateTimeFormat = IntlPolyfill.DateTimeFormat
 
-const PORT = env.PORT || 1338
+const PORT = env.PORT || 3000
 
 createServer().then(async app => {
   try {

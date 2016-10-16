@@ -1,14 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql, withApollo } from 'react-apollo'
-import { connect } from 'react-redux'
 import { NoteTable } from '../_components'
 import { FETCH_NOTES, FETCH_NOTE, DELETE_NOTE, deleteNoteMutation } from '../_graphql'
 
 const { shape, arrayOf, func, bool, object } = PropTypes
 
-@connect(
-  state => state.auth ? { loggedUser: state.auth.loggedUser } || {} : {},
-)
 @graphql(FETCH_NOTES)
 @graphql(DELETE_NOTE, {
   props: deleteNoteMutation,
@@ -35,9 +31,9 @@ export default class NoteList extends Component {
 
   formatList = list => {
     return list.map(({ node }) => {
-      node.displayDate = new Intl.DateTimeFormat(this.context.locale)
+      const displayDate = new Intl.DateTimeFormat(this.context.locale)
         .format(new Date(node.date))
-      return node
+      return Object.assign({ displayDate }, node)
     })
   }
 
@@ -62,7 +58,6 @@ export default class NoteList extends Component {
 
 NoteList.propTypes = {
   deleteNote: func,
-  loggedUser: object,
   client: shape({
     query: func,
   }),

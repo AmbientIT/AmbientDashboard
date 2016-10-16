@@ -10,29 +10,22 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_FINISH :
       if (action.payload.token) {
-        // document.cookie = `token=${action.payload.token}`
         jsCookie.set('token', action.payload.token)
-        // jsCookie.set('locale', navigator.language)
         localStorage.setItem('token', action.payload.token)
       }
-      action.payload.user.id = action.payload.user._id || action.payload.user.id
-      delete action.payload.user._id
       return {
         isLoading: false,
-        loggedUser: action.payload.user,
+        loggedUser: Object.assign({ id: action.payload.user._id }, action.payload.user),
       }
     case LOGIN_LOADING :
-      state.isLoading = true
-      return { ...state }
+      return Object.assign(state, { isLoading: true })
     case LOGIN_ERROR :
-      state.isLoading = false
-      return { ...state }
+      return Object.assign(state, { isLoading: false })
+
     case LOGOUT :
-      state.loggedUser = null
-      // document.cookie = 'token='
       jsCookie.remove('token')
       localStorage.removeItem('token')
-      return { ...state }
+      return Object.assign(state, { loggedUser: null })
     default :
       return state
   }

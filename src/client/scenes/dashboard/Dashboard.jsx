@@ -64,7 +64,7 @@ export default class Dashboard extends Component {
           </MenuItem>
           {this.navLinks.map(nav => {
             return (
-              <Link	to={nav.path} key={nav.label}>
+              <Link to={nav.path} key={nav.label}>
                 <MenuItem onTouchTap={this.handleClose}>
                   {nav.label}
                 </MenuItem>
@@ -78,7 +78,6 @@ export default class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  open: PropTypes.bool,
   children: PropTypes.node,
   logout: PropTypes.func,
 }

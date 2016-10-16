@@ -26,8 +26,8 @@ const getRoutes = ({ store, ctx }) => {
 }
 
 getRoutes.propTypes = {
-  ctx: PropTypes.object,
-  store: PropTypes.object,
+  ctx: PropTypes.shape(),
+  store: PropTypes.shape(),
 }
 
 export default getRoutes

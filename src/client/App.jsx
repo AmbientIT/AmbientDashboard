@@ -29,11 +29,11 @@ export default class App extends Component {
 
 App.propTypes = {
   children: PropTypes.node,
-  muiTheme: PropTypes.object,
-  apolloClient: PropTypes.object,
-  store: PropTypes.object,
+  muiTheme: PropTypes.shape(),
+  apolloClient: PropTypes.shape(),
+  store: PropTypes.shape(),
   locale: PropTypes.string,
-  radiumConfig: PropTypes.object,
+  radiumConfig: PropTypes.shape(),
 }
 
 App.childContextTypes = {

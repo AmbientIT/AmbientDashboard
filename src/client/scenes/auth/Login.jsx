@@ -46,7 +46,6 @@ Login.propTypes = {
   googleLogin: func,
   clientId: string,
   redirectUri: string,
-  scope: string,
 }
 
 Login.defaultProps = {

@@ -1,17 +1,15 @@
 export const updateNoteMutation = ({ mutate, ownProps }) => ({
   submitForm: async note => {
     try {
-      Object.assign(note, ownProps.params)
-
       await mutate({
-        variables: note,
+        variables: Object.assign(note, ownProps.params),
         updateQueries: {
-          getNotes: (prev, { mutationResult: { data: { updateNote } } }) => {
+          getNotes: (prev, { mutationResult: { data: { updateNote: { changedNote } } } }) => {
             if (prev.viewer) {
               const { notes } = prev.viewer
               notes.edges = notes.edges.map(({ node }) => {
-                return node.id === updateNote.changedNote.id
-                  ? { node: updateNote.changedNote }
+                return node.id === changedNote.id
+                  ? { node: changedNote }
                   : { node }
               })
             }
@@ -29,16 +27,21 @@ export const updateNoteMutation = ({ mutate, ownProps }) => ({
 export const createNoteMutation = ({ mutate, ownProps }) => ({
   createNote: async note => {
     try {
-      note.owner = ownProps.loggedUser.id
-
       const { data: { addNote } } = await mutate({
-        variables: note,
+        variables: Object.assign(note, {
+          owner: ownProps.loggedUser.id,
+        }),
         updateQueries: {
-          getNotes: (prev, { mutationResult }) => {
-            if (prev.viewer) {
-              prev.viewer.notes.edges = [...prev.viewer.notes.edges, mutationResult.data.addNote.changedNoteEdge]
-            }
-            return prev
+          getNotes: (prev, { mutationResult: { data: { addNote: { changedNoteEdge } } } }) => {
+            return prev.viewer
+              ? Object.assign(prev, {
+                viewer: {
+                  notes: {
+                    edges: [...prev.viewer.notes.edges, changedNoteEdge],
+                  },
+                },
+              })
+              : prev
           },
         },
       })
