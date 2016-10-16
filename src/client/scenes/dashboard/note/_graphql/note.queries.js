@@ -12,7 +12,8 @@ export const FETCH_NOTES = gql`
             date
             owner {
               id
-              username
+              firstName,
+              lastName,
               email
               avatar
             }

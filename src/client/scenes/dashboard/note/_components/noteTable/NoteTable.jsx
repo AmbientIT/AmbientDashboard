@@ -55,7 +55,7 @@ export class NoteTable extends Component {
         >
           {notes.map((note, index) => (
             <TableRow key={index} selected={note.selected}>
-              <TableRowColumn>{note.owner.email}</TableRowColumn>
+              <TableRowColumn>{note.owner.firstName}</TableRowColumn>
               <TableRowColumn>{note.name}</TableRowColumn>
               <TableRowColumn>{note.displayDate}</TableRowColumn>
               <TableRowColumn>
