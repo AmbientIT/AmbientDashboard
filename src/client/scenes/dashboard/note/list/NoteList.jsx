@@ -23,6 +23,7 @@ export default class NoteList extends Component {
   }
 
   prefetch = id => {
+    console.log(id)
     this.props.client.query({
       query: FETCH_NOTE,
       variables: { id },

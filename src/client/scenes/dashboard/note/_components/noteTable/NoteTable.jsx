@@ -3,24 +3,12 @@ import radium from 'radium'
 import FlatButton from 'material-ui/FlatButton'
 import ActionAndroid from 'material-ui/svg-icons/action/android'
 import { TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
+import { injectIntl } from 'react-intl'
 import { TableWidget } from '../../../../../components/tableWidget/TableWidget'
 import style from './noteTable.style'
 
-
 @radium()
-export class NoteTable extends TableWidget {
-  static contextTypes = {
-    locale: PropTypes.string,
-  }
-
-  formatList = list => {
-    return list.map(({ node, cursor }) => {
-      const displayDate = new Intl.DateTimeFormat(this.context.locale)
-        .format(new Date(node.date))
-      return Object.assign({ displayDate, cursor }, node)
-    })
-  }
-
+export class NoteTableWidget extends TableWidget {
   renderHeader = () => {
     return (
       <TableRow>
@@ -34,25 +22,31 @@ export class NoteTable extends TableWidget {
   }
 
   renderList = () => {
-    const { apolloData, onEdit, onPrefetch, onDelete } = this.props
-    this.list = this.formatList(apolloData.viewer.notes.edges)
+    const { apolloData, onEdit, onPrefetch, onDelete, intl } = this.props
     this.count = apolloData.viewer.notes.count
-    return this.list.map((note, index) => (
-      <TableRow key={index} selected={note.selected}>
-        <TableRowColumn style={style.tableCell}>{note.owner.firstName}</TableRowColumn>
-        <TableRowColumn style={style.tableCell}>{note.name}</TableRowColumn>
-        <TableRowColumn style={style.tableCell}>{note.displayDate}</TableRowColumn>
+    this.list = apolloData.viewer.notes.edges
+    return this.list.map(({ node }, index) => (
+      <TableRow key={index} selected={node.selected}>
+        <TableRowColumn style={style.tableCell}>
+          {node.owner.firstName}
+        </TableRowColumn>
+        <TableRowColumn style={style.tableCell}>
+          {node.name}
+        </TableRowColumn>
+        <TableRowColumn style={style.tableCell}>
+          {intl.formatDate(node.date)}
+        </TableRowColumn>
         <TableRowColumn style={style.tableCell}>
           <FlatButton
-            onTouchTap={() => onEdit(note.id)}
-            onMouseOver={() => onPrefetch(note.id)}
+            onTouchTap={() => onEdit(node.id)}
+            onMouseOver={() => onPrefetch(node.id)}
             icon={<ActionAndroid />}
             style={style.button}
           />
         </TableRowColumn>
         <TableRowColumn style={style.tableCell}>
           <FlatButton
-            onTouchTap={() => onDelete(note.id)}
+            onTouchTap={() => onDelete(node.id)}
             icon={<ActionAndroid />}
             style={style.button}
           />
@@ -64,7 +58,10 @@ export class NoteTable extends TableWidget {
 
 const { shape, arrayOf, string, number, func, bool } = PropTypes
 
-NoteTable.propTypes = {
+NoteTableWidget.propTypes = {
+  intl: shape({
+    format: func,
+  }),
   apolloData: shape({
     loading: bool,
     viewer: shape({
@@ -92,3 +89,6 @@ NoteTable.propTypes = {
   onEdit: func,
   onPrefetch: func,
 }
+
+// try to make it work with an es7 decorator
+export const NoteTable = injectIntl(NoteTableWidget)

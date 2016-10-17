@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { ApolloProvider } from 'react-apollo'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import radium, { StyleRoot, Style } from 'radium'
+import { IntlProvider } from 'react-intl'
 import { reset } from './styles'
 
 @radium()
@@ -13,16 +14,18 @@ export default class App extends Component {
     }
   }
   render() {
-    const { children, muiTheme, apolloClient, store } = this.props
+    const { children, muiTheme, apolloClient, store, locale } = this.props
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <StyleRoot>
-          <Style rules={reset} />
-          <ApolloProvider client={apolloClient} store={store}>
-            {children}
-          </ApolloProvider>
-        </StyleRoot>
-      </MuiThemeProvider>
+      <IntlProvider locale={locale}>
+        <MuiThemeProvider muiTheme={muiTheme}>
+          <StyleRoot>
+            <Style rules={reset} />
+            <ApolloProvider client={apolloClient} store={store}>
+              {children}
+            </ApolloProvider>
+          </StyleRoot>
+        </MuiThemeProvider>
+      </IntlProvider>
     )
   }
 }
