@@ -9,22 +9,45 @@ import style from './noteTable.style'
 
 @radium()
 export class NoteTableWidget extends TableWidget {
+  componentWillMount() {
+    this.assignListAndCount(this.props.apolloData)
+  }
+
+  componentWillUpdate(props) {
+    this.assignListAndCount(props.apolloData)
+  }
+
+  assignListAndCount(apolloData) {
+    if (apolloData.viewer) {
+      this.count = apolloData.viewer.notes.count
+      this.list = apolloData.viewer.notes.edges
+    }
+  }
+
   renderHeader = () => {
     return (
       <TableRow>
-        <TableHeaderColumn style={style.tableCell}>Owner</TableHeaderColumn>
-        <TableHeaderColumn style={style.tableCell}>Name</TableHeaderColumn>
-        <TableHeaderColumn style={style.tableCell}>Date</TableHeaderColumn>
-        <TableHeaderColumn style={style.tableCell}>Edit</TableHeaderColumn>
-        <TableHeaderColumn style={style.tableCell}>Supprimer</TableHeaderColumn>
+        <TableHeaderColumn style={style.tableCell}>
+          Owner
+        </TableHeaderColumn>
+        <TableHeaderColumn style={style.tableCell}>
+          Name
+        </TableHeaderColumn>
+        <TableHeaderColumn style={style.tableCell}>
+          Date
+        </TableHeaderColumn>
+        <TableHeaderColumn style={style.tableCell}>
+          Edit
+        </TableHeaderColumn>
+        <TableHeaderColumn style={style.tableCell}>
+          Supprimer
+        </TableHeaderColumn>
       </TableRow>
     )
   }
 
   renderList = () => {
-    const { apolloData, onEdit, onPrefetch, onDelete, intl } = this.props
-    this.count = apolloData.viewer.notes.count
-    this.list = apolloData.viewer.notes.edges
+    const { onEdit, onPrefetch, onDelete, intl } = this.props
     return this.list.map(({ node }, index) => (
       <TableRow key={index} selected={node.selected}>
         <TableRowColumn style={style.tableCell}>
