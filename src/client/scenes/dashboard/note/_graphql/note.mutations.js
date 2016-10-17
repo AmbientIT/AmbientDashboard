@@ -4,6 +4,7 @@ export const CREATE_NOTE = gql`
   mutation addNote($name: String!, $date: Date!, $owner: ID!){
     addNote(input:{name: $name, date: $date, owner: $owner, clientMutationId: "1"}){
       changedNoteEdge{
+        cursor
         node{
           id
           name
@@ -31,7 +32,8 @@ export const createNoteMutation = ({ mutate, ownProps }) => async note => {
       }),
       updateQueries: {
         getNotes: (prev, { mutationResult: { data: { addNote: { changedNoteEdge } } } }) => {
-          prev.viewer.notes.edges = [...prev.viewer.notes.edges, changedNoteEdge]
+          const { notes } = prev.viewer
+          notes.edges = [...notes.edges, changedNoteEdge]
           return prev
         },
       },
@@ -74,10 +76,10 @@ export const updateNoteMutation = ({ mutate, ownProps }) => async note => {
         getNotes: (prev, { mutationResult: { data: { updateNote: { changedNote } } } }) => {
           if (prev.viewer) {
             const { notes } = prev.viewer
-            notes.edges = notes.edges.map(({ node }) => {
+            notes.edges = notes.edges.map(({ node, cursor }) => {
               return node.id === changedNote.id
-                ? { node: changedNote }
-                : { node }
+                ? { node: changedNote, cursor }
+                : { node, cursor }
             })
           }
           return prev
@@ -106,7 +108,7 @@ export const deleteNoteMutation = ({ mutate }) => async id => {
         getNotes: (prev, { mutationResult }) => {
           if (mutationResult.data.deleteNote.ok) {
             const { notes } = prev.viewer
-
+            notes.count -= notes.count
             notes.edges = notes.edges.filter(({ node }) => node.id !== id)
           }
           return prev

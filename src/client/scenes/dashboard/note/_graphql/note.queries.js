@@ -48,6 +48,7 @@ export const FETCH_NOTE = gql`
       attachements(first: 10){
         count
         edges{
+          cursor
           node{
             id
             name

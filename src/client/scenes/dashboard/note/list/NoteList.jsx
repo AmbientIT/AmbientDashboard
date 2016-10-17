@@ -37,6 +37,14 @@ export default class NoteList extends Component {
     })
   }
 
+  removeSelected = async noteIds => {
+    try {
+      await Promise.all(noteIds.map(id => this.props.deleteNote(id)))
+    } catch (err) {
+      console.error('error remove notes ', err)
+    }
+  }
+
   render() {
     return (
       <NoteTable
@@ -46,6 +54,7 @@ export default class NoteList extends Component {
         onPrefetch={this.prefetch}
         onEdit={this.goToEditView}
         onDelete={this.props.deleteNote}
+        removeSelected={this.removeSelected}
       />
     )
   }

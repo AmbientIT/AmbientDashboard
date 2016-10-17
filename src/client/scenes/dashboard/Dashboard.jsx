@@ -44,16 +44,11 @@ export default class Dashboard extends Component {
     this.context.router.go('/login')
   }
 
-  goToHome = () => {
-    this.context.router.push('/')
-  }
-
   render() {
     return (
       <main>
         <AppBar
           title="Dashboard"
-          onTitleTouchTap={this.goToHome}
           onLeftIconButtonTouchTap={this.handleToggle}
         />
         { this.props.children }
