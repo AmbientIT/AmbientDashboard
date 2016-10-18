@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql, withApollo } from 'react-apollo'
+import MDSpinner from 'react-md-spinner'
 import { NoteTable } from '../_components'
 import { FETCH_NOTES, FETCH_NOTE, DELETE_NOTE, deleteNoteMutation, updateAfterFetchMore } from '../_graphql'
 
@@ -45,18 +46,27 @@ export default class NoteList extends Component {
     }
   }
 
-  render() {
+  renderTable() {
+    const { count, edges } = this.props.data.viewer.notes
     return (
       <NoteTable
         title="Notes de Frais"
-        apolloData={this.props.data}
+        list={edges}
+        count={count}
         fetchMore={this.fetchMore}
         onPrefetch={this.prefetch}
         onEdit={this.goToEditView}
         onDelete={this.props.deleteNote}
         removeSelected={this.removeSelected}
+        selectable
       />
     )
+  }
+
+  render() {
+    return this.props.data.loading
+      ? <MDSpinner />
+      : this.renderTable()
   }
 }
 
@@ -67,5 +77,12 @@ NoteList.propTypes = {
   }),
   data: PropTypes.shape({
     fetchMore: PropTypes.func,
+    loading: PropTypes.bool,
+    viewer: PropTypes.shape({
+      notes: PropTypes.shape({
+        count: PropTypes.number,
+        edges: PropTypes.arrayOf(PropTypes.shape()),
+      }),
+    }),
   }),
 }

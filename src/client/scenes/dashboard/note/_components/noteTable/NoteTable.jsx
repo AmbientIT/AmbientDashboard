@@ -8,23 +8,9 @@ import { TableWidget } from '../../../../../components/tableWidget/TableWidget'
 import style from './noteTable.style'
 
 @radium()
-export class NoteTableWidget extends TableWidget {
-  componentWillMount() {
-    this.assignListAndCount(this.props.apolloData)
-  }
-
-  componentWillUpdate(props) {
-    this.assignListAndCount(props.apolloData)
-  }
-
-  assignListAndCount(apolloData) {
-    if (apolloData.viewer) {
-      this.count = apolloData.viewer.notes.count
-      this.list = apolloData.viewer.notes.edges
-    }
-  }
-
-  renderHeader = () => {
+@injectIntl
+export class NoteTable extends TableWidget {
+  renderTableHeader = () => {
     return (
       <TableRow>
         <TableHeaderColumn style={style.tableCell}>
@@ -46,9 +32,9 @@ export class NoteTableWidget extends TableWidget {
     )
   }
 
-  renderList = () => {
+  renderTableData = () => {
     const { onEdit, onPrefetch, onDelete, intl } = this.props
-    return this.list.map(({ node }, index) => (
+    return this.props.list.map(({ node }, index) => (
       <TableRow key={index} selected={node.selected}>
         <TableRowColumn style={style.tableCell}>
           {node.owner.firstName}
@@ -79,39 +65,29 @@ export class NoteTableWidget extends TableWidget {
   }
 }
 
-const { shape, arrayOf, string, number, func, bool } = PropTypes
+const { shape, arrayOf, string, number, func } = PropTypes
 
-NoteTableWidget.propTypes = {
-  intl: shape({
-    format: func,
-  }),
-  apolloData: shape({
-    loading: bool,
-    viewer: shape({
-      notes: shape({
-        edges: arrayOf(shape({
-          node: shape({
-            id: string,
-            name: string,
-            amount: string,
-            date: PropTypes.date,
-            owner: shape({
-              email: string,
-              firstName: string,
-              avatar: string,
-            }),
-            attachements: shape({
-              count: number,
-            }),
-          }),
-        })),
-      }),
-    }),
-  }),
+NoteTable.propTypes = {
   onDelete: func,
   onEdit: func,
   onPrefetch: func,
+  intl: shape({
+    formatDate: func,
+  }),
+  list: arrayOf(shape({
+    node: shape({
+      id: string,
+      name: string,
+      amount: string,
+      date: PropTypes.date,
+      owner: shape({
+        email: string,
+        firstName: string,
+        avatar: string,
+      }),
+      attachements: shape({
+        count: number,
+      }),
+    }),
+  })),
 }
-
-// try to make it work with an es7 decorator
-export const NoteTable = injectIntl(NoteTableWidget)
