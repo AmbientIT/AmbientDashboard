@@ -1,6 +1,6 @@
 import React from 'react'
-import { formatHeaders } from '../../../../lib/note'
-import { NoteActionColumn } from '../_components'
+import { formatHeaders } from '../../lib/note'
+import { NoteActionColumn } from '../../components'
 
 export const fetchNotesReducer = ({ ownProps: { handleRemove }, data }) => {
   const returnLoading = () => ({ loading: data.loading })

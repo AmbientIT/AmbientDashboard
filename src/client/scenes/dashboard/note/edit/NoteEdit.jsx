@@ -2,10 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
 import { bindActionCreators } from 'redux'
-import { uploadAttachement } from '../_actions/attachement.actions'
-import { NoteForm, Attachements } from '../_components'
-import { FETCH_NOTE, UPDATE_NOTE, updateNoteMutation } from '../_graphql'
-import { MyDropzone } from '../../../../components'
+import { uploadAttachement } from '../../../../store/actions/attachement'
+import { NoteForm, Attachements, MyDropzone } from '../../../../components'
+import { FETCH_NOTE, UPDATE_NOTE, updateNoteMutation } from '../../../../apollo'
 
 @connect(
   state => state.auth ? { loggedUser: state.auth.loggedUser } || {} : {},

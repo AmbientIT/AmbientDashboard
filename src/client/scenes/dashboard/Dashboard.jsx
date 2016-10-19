@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 import Drawer from 'material-ui/Drawer'
 import MenuItem from 'material-ui/MenuItem'
 import AppBar from 'material-ui/AppBar'
-import { logout } from '../auth/_actions/auth.actions'
+import { logout } from '../../store/actions/auth'
 
 @connect(
   state => state.auth ? state.auth.loggedUser : {},

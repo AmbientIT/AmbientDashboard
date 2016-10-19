@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql, withApollo } from 'react-apollo'
 import MDSpinner from 'react-md-spinner'
-import { SmartTable } from '../../../../components'
-import { NoteToolbar } from '../_components'
+import { SmartTable, NoteToolbar } from '../../../../components'
 import {
   FETCH_NOTES,
   FETCH_NOTE,
@@ -11,7 +10,7 @@ import {
   deleteNoteMutation,
   fetchMoreNotesUpdateQuery,
   fetchNotesReducer,
-} from '../_graphql'
+} from '../../../../apollo'
 
 @graphql(DELETE_NOTE, {
   props: data => ({

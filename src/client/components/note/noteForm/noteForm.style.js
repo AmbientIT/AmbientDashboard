@@ -1,4 +1,4 @@
-import { mediaQueries } from '../../../../../styles'
+import { mediaQueries } from '../../../styles'
 
 export default {
   form: {

@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Paper from 'material-ui/Paper'
 import radium from 'radium'
 import style from './noteForm.style'
-import { CurrencyField, MyDatePicker } from '../../../../../components'
+import { CurrencyField, MyDatePicker } from '../../index'
 
 @reduxForm({
   form: 'note',

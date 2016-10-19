@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { FilePreview } from '../../../../../components'
+import { FilePreview } from '../../index'
 
 export const Attachements = ({ attachements, onRemoveAttachement }) => {
   return (

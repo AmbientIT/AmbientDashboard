@@ -1,5 +1,5 @@
 import { bindActionCreators } from 'redux'
-import { getLoggedUserAndLogin } from './auth/_actions/auth.actions'
+import { getLoggedUserAndLogin } from '../store/actions/auth'
 
 export const requireAuth = ({ getState, dispatch }, ctx) => async (nextState, replace, callback) => {
   const { auth } = getState()

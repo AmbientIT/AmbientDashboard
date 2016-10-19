@@ -2,9 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import GoogleLogin from 'react-google-login'
-import { googleLogin as googleAuth } from './_actions/auth.actions'
-
-const { string, func } = PropTypes
+import { googleLogin as googleAuth } from '../../store/actions/auth'
 
 @connect(
   state => state.login ? { isLoading: state.login.isLoading } : {},
@@ -43,9 +41,9 @@ export default class Login extends Component {
 }
 
 Login.propTypes = {
-  googleLogin: func,
-  clientId: string,
-  redirectUri: string,
+  googleLogin: PropTypes.func,
+  clientId: PropTypes.string,
+  redirectUri: PropTypes.string,
 }
 
 Login.defaultProps = {

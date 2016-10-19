@@ -1,9 +1,8 @@
-import { amountToFloat } from '../../../../lib/currency'
-import { createNoteUpdateQuery, updateNoteUpdateQuery, getRemoveNoteUpdateQuery } from './index'
+import { amountToFloat } from '../../lib/currency'
+import { createNoteUpdateQuery, updateNoteUpdateQuery, getRemoveNoteUpdateQuery } from './reducer'
 
 export const createNoteMutation = ({ mutate, ownProps }) => async note => {
   note.amount = amountToFloat(note.amount)
-  console.log('mutate')
   try {
     const { data: { addNote } } = await mutate({
       variables: Object.assign(note, {

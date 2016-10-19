@@ -1,5 +1,5 @@
 import jsCookie from 'js-cookie'
-import { LOGIN_LOADING, LOGIN_FINISH, LOGIN_ERROR, LOGOUT } from '../../scenes/auth/_actions/auth.actions'
+import { LOGIN_LOADING, LOGIN_FINISH, LOGIN_ERROR, LOGOUT } from '../actions/auth'
 
 const initialState = {
   isLoading: true,

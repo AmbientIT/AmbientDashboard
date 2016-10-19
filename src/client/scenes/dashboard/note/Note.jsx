@@ -3,13 +3,8 @@ import { graphql } from 'react-apollo'
 import { Link } from 'react-router'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
-import { FETCH_NOTES } from './_graphql'
-
-const style = {
-  position: 'fixed',
-  bottom: '30px',
-  right: '30px',
-}
+import { FETCH_NOTES } from '../../../apollo'
+import style from './note.style'
 
 @graphql(FETCH_NOTES)
 class Note extends Component {
@@ -17,7 +12,7 @@ class Note extends Component {
     const { children } = this.props
     return (
       <div>
-        <Link to="/note/create" style={style}>
+        <Link to="/note/create" style={style.fab}>
           <FloatingActionButton>
             <ContentAdd />
           </FloatingActionButton>
