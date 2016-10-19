@@ -1,103 +1,105 @@
 import React, { Component, PropTypes } from 'react'
-import { Form } from 'formsy-react'
-import { FormsyDate, FormsyText } from 'formsy-material-ui/lib'
+import { Field, reduxForm } from 'redux-form'
+import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
 import Paper from 'material-ui/Paper'
 import radium from 'radium'
 import style from './noteForm.style'
+import { CurrencyField, MyDatePicker } from '../../../../../components'
 
-const { shape, string, instanceOf, func } = PropTypes
+@reduxForm({
+  form: 'note',
+})
 @radium()
 export class NoteForm extends Component {
   static contextTypes = {
-    locale: string,
+    locale: PropTypes.string,
   }
 
-  state = {
-    canSubmit: false,
-    files: [],
-  }
-
-  errorMessages = {
-    wordsError: 'Please only use letters',
-  }
-
-  enableButton = () => {
-    this.setState({
-      canSubmit: true,
-    })
-  }
-
-  disableButton = () => {
-    this.setState({
-      canSubmit: false,
-    })
-  }
-
-  notifyFormError = (data) => {
-    console.error('Form error:', data)
+  constructor(props, context) {
+    super(props, context)
+    this.currencyConfig = {
+      precision: 2,
+      separator: ',',
+      delimiter: '.',
+    }
+    switch (this.context.locale) {
+      case 'en_us':
+        this.currencyConfig.unit = '$'
+        break
+      default:
+        this.currencyConfig.unit = '€'
+        break
+    }
   }
 
   render() {
-    const { wordsError } = this.errorMessages
-    const { note, submitForm } = this.props
+    const { handleSubmit } = this.props
     return (
       <Paper zDepth={3}>
-        <Form
-          onValid={this.enableButton}
-          onInvalid={this.disableButton}
-          onValidSubmit={submitForm}
-          onInvalidSubmit={this.notifyFormError}
+        <form
           style={style.form}
+          onSubmit={handleSubmit}
         >
           <div style={style.inputContainer}>
-            <FormsyText
-              style={style.input}
+            <Field
               name="name"
-              validations="isWords"
-              validationError={wordsError}
-              required
-              value={note.name}
+              component={TextField}
               hintText="Nommer la note de frais"
               floatingLabelText="Titre"
+              style={style.input}
             />
           </div>
           <div style={style.inputContainer}>
-            <FormsyDate
+            <Field
+              name="description"
+              component={TextField}
+              hintText="Decrire la note de frais"
+              floatingLabelText="Description"
               style={style.input}
+            />
+          </div>
+          <div style={style.inputContainer}>
+            <Field
               name="date"
-              required
-              value={note.date}
+              component={MyDatePicker}
               floatingLabelText="Date"
+              hintText="Dater cette note de frais"
               locale={this.context.locale}
               DateTimeFormat={Intl.DateTimeFormat}
               okLabel="OK"
               cancelLabel="Annuler"
+              textFieldStyle={style.input}
+            />
+          </div>
+          <div style={style.inputContainer}>
+            <Field
+              name="amount"
+              component={CurrencyField}
+              style={style.input}
+              mask={this.currencyConfig}
+              hintText="Le montant de la note de frais"
+              floatingLabelText="Montant"
             />
           </div>
           <div style={style.inputContainer}>
             <RaisedButton
-              style={style.input}
               type="submit"
               label="Submit"
-              disabled={!this.state.canSubmit}
+              style={style.input}
             />
           </div>
-        </Form>
+        </form>
       </Paper>
     )
   }
 }
 
 NoteForm.propTypes = {
-  note: shape({
-    name: string,
-    date: instanceOf(Date),
-  }),
-  submitForm: func,
+  handleSubmit: PropTypes.func,
 }
 
 NoteForm.defaultProps = {
-  note: {},
+  initialValues: {},
   submitForm: () => {},
 }

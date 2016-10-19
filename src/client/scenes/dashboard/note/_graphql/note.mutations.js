@@ -1,14 +1,16 @@
 import gql from 'graphql-tag'
 
 export const CREATE_NOTE = gql`
-  mutation addNote($name: String!, $date: Date!, $owner: ID!){
-    addNote(input:{name: $name, date: $date, owner: $owner, clientMutationId: "1"}){
+  mutation addNote($name: String!, $description: String!, $amount: Float!, $date: Date!, $owner: ID!){
+    addNote(input:{name: $name, date: $date, amount: $amount, description: $description, owner: $owner, clientMutationId: "1"}){
       changedNoteEdge{
         cursor
         node{
           id
           name
           date
+          amount
+          description
           owner{
             id
             firstName
@@ -24,7 +26,20 @@ export const CREATE_NOTE = gql`
     }
   }
 `
+// todo move this to form component
+const amountToFloat = amount => {
+  const amountArray = amount.split(',')
+  const amountInt = amountArray[0]
+    .split(' ')[1]
+    .split('.')
+    .reduce((base, next) => `${base}${next}`, '')
+
+  return parseFloat(`${amountInt}.${amountArray[1]}`)
+}
+
 export const createNoteMutation = ({ mutate, ownProps }) => async note => {
+  note.amount = amountToFloat(note.amount)
+  // note.amount = VMasker.toNumber(note.amount)
   try {
     const { data: { addNote } } = await mutate({
       variables: Object.assign(note, {
@@ -33,7 +48,10 @@ export const createNoteMutation = ({ mutate, ownProps }) => async note => {
       updateQueries: {
         getNotes: (prev, { mutationResult: { data: { addNote: { changedNoteEdge } } } }) => {
           const { notes } = prev.viewer
-          notes.edges = [...notes.edges, changedNoteEdge]
+          if (notes.edges.length === notes.count) {
+            notes.edges = [...notes.edges, changedNoteEdge]
+            notes.count += notes.count
+          }
           return prev
         },
       },
@@ -47,12 +65,14 @@ export const createNoteMutation = ({ mutate, ownProps }) => async note => {
 }
 
 export const UPDATE_NOTE = gql`
-  mutation updateNote($name: String!, $date: Date!, $id: ID!){
-    updateNote(input:{id: $id, name: $name, date: $date, clientMutationId: "2"}){
+  mutation updateNote($name: String!, $date: Date!, $amount: Float!, $description:String!, $id: ID!){
+    updateNote(input:{id: $id, name: $name, date: $date, amount: $amount, description: $description, clientMutationId: "2"}){
       changedNote{
         id
         name
         date
+        amount
+        description
         owner{
           id
           firstName
@@ -69,6 +89,7 @@ export const UPDATE_NOTE = gql`
 `
 
 export const updateNoteMutation = ({ mutate, ownProps }) => async note => {
+  note.amount = amountToFloat(note.amount)
   try {
     await mutate({
       variables: Object.assign(note, ownProps.params),

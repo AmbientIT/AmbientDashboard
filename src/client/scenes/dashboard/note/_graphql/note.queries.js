@@ -11,6 +11,7 @@ export const FETCH_NOTES = gql`
             id
             name
             date
+            amount
             owner {
               id
               firstName,
@@ -45,6 +46,8 @@ export const FETCH_NOTE = gql`
       id
       name
       date
+      amount
+      description
       attachements(first: 10){
         count
         edges{

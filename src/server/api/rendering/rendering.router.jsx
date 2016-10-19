@@ -31,6 +31,7 @@ export default (router) => {
             apolloClient={getApolloClient({ headers })}
             muiTheme={getMuiTheme(Object.assign({ userAgent }, lightBaseTheme))}
             locale={locale}
+            store={ctx.url !== '/login' ? store : null}
           >
             <RouterContext {...renderProps} />
           </App>

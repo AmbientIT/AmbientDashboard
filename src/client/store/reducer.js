@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
+import { reducer as form } from 'redux-form'
 import apolloClient from './apollo'
 import auth from './reducers/auth'
 
-export default combineReducers({ apollo: apolloClient.reducer(), auth })
+export default combineReducers({ apollo: apolloClient.reducer(), auth, form })
 
 
 // const requireAllReducers = requireContext => {

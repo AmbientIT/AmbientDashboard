@@ -14,7 +14,11 @@ import { CREATE_NOTE, createNoteMutation } from '../_graphql'
 })
 export default class NoteCreate extends Component {
   render() {
-    return <NoteForm submitForm={this.props.createNote} />
+    const initialValues = {
+      amount: 0,
+      date: new Date(Date.now()),
+    }
+    return <NoteForm onSubmit={this.props.createNote} initialValues={initialValues} />
   }
 }
 

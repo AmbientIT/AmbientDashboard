@@ -37,7 +37,7 @@ export default class NoteEdit extends Component {
     note.date = new Date(note.date)
     return (
       <section>
-        <NoteForm note={note} submitForm={this.props.updateNote} />
+        <NoteForm initialValues={note} onSubmit={this.props.updateNote} />
         <Attachements
           attachements={note.attachements.edges}
           onRemoveAttachement={this.removeAttachementHandler}

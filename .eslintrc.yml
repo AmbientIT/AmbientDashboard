@@ -25,3 +25,4 @@ rules:
   import/prefer-default-export: 0
   react/prefer-stateless-function: 0
   react/no-danger: 0
+  react/style-prop-object: 0

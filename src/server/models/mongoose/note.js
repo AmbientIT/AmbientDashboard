@@ -10,6 +10,12 @@ const noteSchema = new Schema({
   date: {
     type: Date,
   },
+  amount: {
+    type: Number,
+  },
+  locale: {
+    type: String,
+  },
   attachements: [{
     type: Schema.Types.ObjectId,
     ref: 'Attachement',
@@ -18,6 +24,11 @@ const noteSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
+})
+
+noteSchema.pre('save', (next, data) => {
+  console.log(data, next)
+  next()
 })
 
 export default mongoose.model('Note', noteSchema)

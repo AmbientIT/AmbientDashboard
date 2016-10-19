@@ -3,13 +3,24 @@ import radium from 'radium'
 import FlatButton from 'material-ui/FlatButton'
 import ActionAndroid from 'material-ui/svg-icons/action/android'
 import { TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
-import { injectIntl } from 'react-intl'
+import { FormattedNumber, FormattedDate } from 'react-intl'
 import { TableWidget } from '../../../../../components/tableWidget/TableWidget'
 import style from './noteTable.style'
 
 @radium()
-@injectIntl
 export class NoteTable extends TableWidget {
+  constructor(props, context) {
+    super(props, context)
+    switch (context.locale) {
+      case 'en_us':
+        this.curency = 'USD'
+        break
+      default:
+        this.currency = 'EUR'
+        break
+    }
+  }
+
   renderTableHeader = () => {
     return (
       <TableRow>
@@ -23,6 +34,9 @@ export class NoteTable extends TableWidget {
           Date
         </TableHeaderColumn>
         <TableHeaderColumn style={style.tableCell}>
+          Amount
+        </TableHeaderColumn>
+        <TableHeaderColumn style={style.tableCell}>
           Edit
         </TableHeaderColumn>
         <TableHeaderColumn style={style.tableCell}>
@@ -33,8 +47,8 @@ export class NoteTable extends TableWidget {
   }
 
   renderTableData = () => {
-    const { onEdit, onPrefetch, onDelete, intl } = this.props
-    return this.props.list.map(({ node }, index) => (
+    const { onEdit, onPrefetch, onDelete, list } = this.props
+    return list.map(({ node }, index) => (
       <TableRow key={index} selected={node.selected}>
         <TableRowColumn style={style.tableCell}>
           {node.owner.firstName}
@@ -43,7 +57,10 @@ export class NoteTable extends TableWidget {
           {node.name}
         </TableRowColumn>
         <TableRowColumn style={style.tableCell}>
-          {intl.formatDate(node.date)}
+          <FormattedDate value={node.date} />
+        </TableRowColumn>
+        <TableRowColumn style={style.tableCell}>
+          <FormattedNumber value={node.amount} style="currency" currency={this.currency} />
         </TableRowColumn>
         <TableRowColumn style={style.tableCell}>
           <FlatButton
@@ -78,7 +95,7 @@ NoteTable.propTypes = {
     node: shape({
       id: string,
       name: string,
-      amount: string,
+      amount: number,
       date: PropTypes.date,
       owner: shape({
         email: string,
