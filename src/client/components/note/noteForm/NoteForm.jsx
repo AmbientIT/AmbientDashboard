@@ -12,10 +12,6 @@ import { CurrencyField, MyDatePicker } from '../../index'
 })
 @radium()
 export class NoteForm extends Component {
-  static contextTypes = {
-    locale: PropTypes.string,
-  }
-
   constructor(props, context) {
     super(props, context)
     this.currencyConfig = {
@@ -34,7 +30,7 @@ export class NoteForm extends Component {
   }
 
   render() {
-    const { handleSubmit } = this.props
+    const { handleSubmit, locale } = this.props
     return (
       <Paper zDepth={3}>
         <form
@@ -65,7 +61,7 @@ export class NoteForm extends Component {
               component={MyDatePicker}
               floatingLabelText="Date"
               hintText="Dater cette note de frais"
-              locale={this.context.locale}
+              locale={locale}
               DateTimeFormat={Intl.DateTimeFormat}
               okLabel="OK"
               cancelLabel="Annuler"
@@ -97,6 +93,7 @@ export class NoteForm extends Component {
 
 NoteForm.propTypes = {
   handleSubmit: PropTypes.func,
+  locale: PropTypes.string,
 }
 
 NoteForm.defaultProps = {

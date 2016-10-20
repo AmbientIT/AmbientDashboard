@@ -4,7 +4,6 @@ import { graphql, withApollo } from 'react-apollo'
 import { SmartTable, NoteToolbar } from '../../../../components'
 import {
   FETCH_NOTES,
-  // FILTER_NOTES_BY_NAME,
   FETCH_NOTE,
   DELETE_NOTE,
   deleteNoteMutation,
@@ -13,7 +12,7 @@ import {
   filterUpdateQuery,
 } from '../../../../apollo'
 
-// const getLastCursor = data => data.length > 0 ? data[data.length - 1].cursor : null
+const NOTE_BY_PAGE = 3
 
 @injectIntl
 @graphql(DELETE_NOTE, {
@@ -24,6 +23,7 @@ import {
 @graphql(FETCH_NOTES, {
   options: {
     variables: {
+      first: NOTE_BY_PAGE,
       orderBy: 'DATE_DESC',
       cursor: null,
       name: null,
@@ -68,6 +68,7 @@ export default class NoteList extends Component {
     this.props.fetchMoreNotes({
       query: FETCH_NOTES,
       variables: {
+        first: NOTE_BY_PAGE,
         cursor,
         name: this.state.filterName,
         date: this.state.filterDate,
@@ -85,6 +86,7 @@ export default class NoteList extends Component {
       this.props.fetchMoreNotes({
         query: FETCH_NOTES,
         variables: {
+          first: this.props.data.length,
           name: this.state.filterName,
           date: this.state.filterDate,
           cursor: null,
@@ -96,11 +98,11 @@ export default class NoteList extends Component {
   }
 
   handleFilterDate = async filterDate => {
-    console.log(filterDate)
     await this.setState({ filterDate, filterName: null })
     this.props.fetchMoreNotes({
       query: FETCH_NOTES,
       variables: {
+        first: this.props.data.length,
         date: this.state.filterDate,
         name: this.state.filterName,
         cursor: null,
@@ -122,6 +124,7 @@ export default class NoteList extends Component {
     this.props.fetchMoreNotes({
       query: FETCH_NOTES,
       variables: {
+        first: this.props.data.length,
         name: filterName,
         date: filterDate,
         cursor: null,

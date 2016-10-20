@@ -43,7 +43,7 @@ export const filterUpdateQuery = (prev, { fetchMoreResult }) => {
   return Object.assign(prev, {
     viewer: {
       notes: {
-        count: fetchMoreResult.data.viewer.notes.edges.length,
+        count: fetchMoreResult.data.viewer.notes.count,
         edges: fetchMoreResult.data.viewer.notes.edges,
       },
     },

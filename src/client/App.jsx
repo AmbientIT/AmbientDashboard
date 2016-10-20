@@ -9,7 +9,6 @@ import { reset } from './styles'
 export default class App extends Component {
   getChildContext() {
     return {
-      locale: this.props.locale,
       _radiumConfig: this.props.radiumConfig,
     }
   }

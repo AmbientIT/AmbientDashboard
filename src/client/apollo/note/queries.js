@@ -1,9 +1,9 @@
 import gql from 'graphql-tag'
 
 export const FETCH_NOTES = gql`
-  query getNotes($cursor:String, $orderBy:orderByNote, $name:String, $date:Date) {
+  query getNotes($first:Int, $cursor:String, $orderBy:orderByNote, $name:String, $date:Date) {
     viewer{
-      notes(first:3 after:$cursor orderBy:$orderBy name:$name date:$date){
+      notes(first:$first after:$cursor orderBy:$orderBy name:$name date:$date){
         count
         edges{
           cursor
