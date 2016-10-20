@@ -1,4 +1,4 @@
-export const getCurencyByLocale = locale => {
+export const getCurrencyByLocale = locale => {
   let currency
   switch (locale) {
     case 'en_us':

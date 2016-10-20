@@ -1,38 +1,9 @@
 import gql from 'graphql-tag'
 
-export const FETCH_NOTES_BY_NAME = gql`
-  query getNotesByName($cursor:String, $name:String) {
-    viewer{
-      notes(first:3 after:$cursor name: $name){
-        count
-        edges{
-          cursor
-          node{
-            id
-            name
-            date
-            amount
-            owner {
-              id
-              firstName,
-              lastName,
-              email
-              avatar
-            }
-            attachements{
-              count
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export const FETCH_NOTES = gql`
-  query getNotes($cursor:String) {
+  query getNotes($cursor:String, $orderBy:orderByNote, $name:String, $date:Date) {
     viewer{
-      notes(first:3 after:$cursor){
+      notes(first:3 after:$cursor orderBy:$orderBy name:$name date:$date){
         count
         edges{
           cursor

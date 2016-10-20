@@ -1,28 +1,47 @@
 import React, { Component, PropTypes } from 'react'
+import { injectIntl } from 'react-intl'
 import { graphql, withApollo } from 'react-apollo'
-import MDSpinner from 'react-md-spinner'
 import { SmartTable, NoteToolbar } from '../../../../components'
 import {
   FETCH_NOTES,
+  // FILTER_NOTES_BY_NAME,
   FETCH_NOTE,
-  // FETCH_NOTES_BY_NAME,
   DELETE_NOTE,
   deleteNoteMutation,
   fetchMoreNotesUpdateQuery,
   fetchNotesReducer,
+  filterUpdateQuery,
 } from '../../../../apollo'
 
+// const getLastCursor = data => data.length > 0 ? data[data.length - 1].cursor : null
+
+@injectIntl
 @graphql(DELETE_NOTE, {
   props: data => ({
     handleRemove: deleteNoteMutation(data),
   }),
 })
 @graphql(FETCH_NOTES, {
+  options: {
+    variables: {
+      orderBy: 'DATE_DESC',
+      cursor: null,
+      name: null,
+      date: null,
+    },
+  },
   props: fetchNotesReducer,
 })
 @withApollo
 export default class NoteList extends Component {
   state = {
+    filterDate: null,
+    filterName: null,
+    filterColumn: {
+      isDesc: true,
+      name: 'date',
+      orderBy: 'DATE_DESC',
+    },
     tableProps: {
       selectable: true,
       multiSelectable: true,
@@ -48,13 +67,68 @@ export default class NoteList extends Component {
   handleFetchMore = cursor => {
     this.props.fetchMoreNotes({
       query: FETCH_NOTES,
-      variables: { cursor },
+      variables: {
+        cursor,
+        name: this.state.filterName,
+        date: this.state.filterDate,
+        orderBy: this.state.filterColumn.orderBy,
+      },
       updateQuery: fetchMoreNotesUpdateQuery,
     })
   }
 
-  handleFilterName = filter => {
-    console.log('filter name : ', filter)
+  handleFilterName = async filterName => {
+    await this.setState({ filterName, filterDate: null })
+    if (filterName.length === 0) {
+      this.props.refetchNotes()
+    } else {
+      this.props.fetchMoreNotes({
+        query: FETCH_NOTES,
+        variables: {
+          name: this.state.filterName,
+          date: this.state.filterDate,
+          cursor: null,
+          orderBy: this.state.filterColumn.orderBy,
+        },
+        updateQuery: filterUpdateQuery,
+      })
+    }
+  }
+
+  handleFilterDate = async filterDate => {
+    console.log(filterDate)
+    await this.setState({ filterDate, filterName: null })
+    this.props.fetchMoreNotes({
+      query: FETCH_NOTES,
+      variables: {
+        date: this.state.filterDate,
+        name: this.state.filterName,
+        cursor: null,
+        orderBy: this.state.filterColumn.orderBy,
+      },
+      updateQuery: filterUpdateQuery,
+    })
+  }
+
+  handleSortByColumn = async columnName => {
+    const { filterColumn, filterName, filterDate } = this.state
+    await this.setState({
+      filterColumn: {
+        isDesc: filterColumn.name === columnName ? !filterColumn.isDesc : true,
+        name: columnName,
+        orderBy: `${filterColumn.name.toUpperCase()}_${filterColumn.isDesc ? 'DESC' : 'ASC'}`,
+      },
+    })
+    this.props.fetchMoreNotes({
+      query: FETCH_NOTES,
+      variables: {
+        name: filterName,
+        date: filterDate,
+        cursor: null,
+        orderBy: this.state.filterColumn.orderBy,
+      },
+      updateQuery: filterUpdateQuery,
+    })
   }
 
   handleRemoveSelected = async noteIds => {
@@ -65,28 +139,27 @@ export default class NoteList extends Component {
     }
   }
 
-  renderTable() {
-    const { data, headers, count } = this.props
+  render() {
+    const { data, headers, count, loading } = this.props
     return (
       <section>
         <NoteToolbar
           onFilterName={this.handleFilterName}
+          onFilterDate={this.handleFilterDate}
         />
         <SmartTable
           count={count}
           headers={headers}
           data={data}
+          isLoading={loading}
           tableProps={this.state.tableProps}
           headerProps={this.state.headerProps}
           bodyProps={this.state.bodyProps}
           onFetchMore={this.handleFetchMore}
+          sortByColumn={this.handleSortByColumn}
         />
       </section>
     )
-  }
-
-  render() {
-    return this.props.loading ? <MDSpinner /> : this.renderTable()
   }
 }
 
@@ -99,5 +172,6 @@ NoteList.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape()),
   headers: PropTypes.arrayOf(PropTypes.shape()),
   fetchMoreNotes: PropTypes.func,
+  refetchNotes: PropTypes.func,
   count: PropTypes.number,
 }

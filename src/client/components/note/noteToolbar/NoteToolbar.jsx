@@ -29,10 +29,10 @@ export class NoteToolbar extends Component {
   }
 
   renderFilterField() {
-    const { onFilterName } = this.props
+    const { onFilterName, onFilterDate } = this.props
     switch (this.state.input.field) {
       case 'date':
-        return <DatePicker hintText="Pick a date" />
+        return <DatePicker hintText="Pick a date" onChange={evt => onFilterDate(evt.target.value)} />
       case 'name':
       default:
         return <TextField hintText="Enter some text" onChange={evt => onFilterName(evt.target.value)} />
@@ -64,4 +64,5 @@ export class NoteToolbar extends Component {
 
 NoteToolbar.propTypes = {
   onFilterName: PropTypes.func,
+  onFilterDate: PropTypes.func,
 }

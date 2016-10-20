@@ -10,10 +10,12 @@ import { addLocaleData } from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import fr from 'react-intl/locale-data/fr'
 import es from 'react-intl/locale-data/es'
-import apolloClient from './store/apollo'
-import configureStore from './store/configureStore'
+import apolloClient from './apollo'
+import configureStore from './store'
 import getRoutes from './scenes/routes'
 import App from './App'
+
+export { configureStore, getRoutes, App }
 
 addLocaleData([...en, ...fr, ...es])
 

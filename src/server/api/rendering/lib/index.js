@@ -3,9 +3,7 @@ import { Locales } from 'locale'
 import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import { env } from '../../../_core'
 
-export * from './Html'
-
-export const _match = (params) => {
+export const _match = params => {
   return new Promise((resolve, reject) => {
     match(params, (error, redirectLocation, renderProps) => {
       if (error) {
@@ -28,6 +26,6 @@ export const getApolloClient = ({ headers }) => {
 
 
 export const getLocale = headers => {
-  const locales = new Locales(headers['accept-language'])
-  return locales.best(new Locales(env.languages)).code
+  return new Locales(headers['accept-language'])
+    .best(new Locales(env.languages)).code
 }
