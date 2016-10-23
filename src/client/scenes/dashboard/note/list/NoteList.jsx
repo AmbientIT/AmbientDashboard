@@ -3,75 +3,60 @@ import { injectIntl } from 'react-intl'
 import { graphql, withApollo } from 'react-apollo'
 import { SmartTable, NoteToolbar } from '../../../../components'
 import {
-  FETCH_NOTES,
-  FETCH_NOTE,
+  GET_NOTES,
   DELETE_NOTE,
+  UPDATE_NOTE,
   deleteNoteMutation,
+  updateNoteMutation,
   fetchMoreNotesUpdateQuery,
-  fetchNotesReducer,
+  getNotesReducer,
   filterUpdateQuery,
 } from '../../../../apollo'
-
-const NOTE_BY_PAGE = 3
+import getHeaders from './lib/header'
+import getAtionButtons from './lib/actionButtons'
+import { NOTE_PER_PAGE, mUiTableProps } from './lib/config'
 
 @injectIntl
+@withApollo
+@graphql(UPDATE_NOTE, {
+  props: data => ({
+    handleUpdate: updateNoteMutation(data),
+  }),
+})
 @graphql(DELETE_NOTE, {
   props: data => ({
     handleRemove: deleteNoteMutation(data),
   }),
 })
-@graphql(FETCH_NOTES, {
+@graphql(GET_NOTES, {
   options: {
     variables: {
-      first: NOTE_BY_PAGE,
+      first: NOTE_PER_PAGE,
       orderBy: 'DATE_DESC',
       cursor: null,
       name: null,
-      date: null,
     },
   },
-  props: fetchNotesReducer,
+  props: getNotesReducer,
 })
-@withApollo
 export default class NoteList extends Component {
   state = {
-    filterDate: null,
     filterName: null,
     filterColumn: {
       isDesc: true,
       name: 'date',
       orderBy: 'DATE_DESC',
     },
-    tableProps: {
-      selectable: true,
-      multiSelectable: true,
-    },
-    headerProps: {
-      displaySelectAll: true,
-      adjustForCheckbox: true,
-    },
-    bodyProps: {
-      showRowHover: true,
-      stripedRows: true,
-      displayRowCheckbox: true,
-    },
+    ...mUiTableProps,
   }
 
-  handlePrefetch = id => {
-    this.props.client.query({
-      query: FETCH_NOTE,
-      variables: { id },
-    })
-  }
-
-  handleFetchMore = cursor => {
+  handleFetchMore = () => {
     this.props.fetchMoreNotes({
-      query: FETCH_NOTES,
+      query: GET_NOTES,
       variables: {
-        first: NOTE_BY_PAGE,
-        cursor,
+        first: NOTE_PER_PAGE,
+        cursor: this.props.data[this.props.data.length - 1].cursor,
         name: this.state.filterName,
-        date: this.state.filterDate,
         orderBy: this.state.filterColumn.orderBy,
       },
       updateQuery: fetchMoreNotesUpdateQuery,
@@ -79,16 +64,14 @@ export default class NoteList extends Component {
   }
 
   handleFilterName = async filterName => {
-    await this.setState({ filterName, filterDate: null })
     if (filterName.length === 0) {
       this.props.refetchNotes()
     } else {
       this.props.fetchMoreNotes({
-        query: FETCH_NOTES,
+        query: GET_NOTES,
         variables: {
           first: this.props.data.length,
           name: this.state.filterName,
-          date: this.state.filterDate,
           cursor: null,
           orderBy: this.state.filterColumn.orderBy,
         },
@@ -97,23 +80,8 @@ export default class NoteList extends Component {
     }
   }
 
-  handleFilterDate = async filterDate => {
-    await this.setState({ filterDate, filterName: null })
-    this.props.fetchMoreNotes({
-      query: FETCH_NOTES,
-      variables: {
-        first: this.props.data.length,
-        date: this.state.filterDate,
-        name: this.state.filterName,
-        cursor: null,
-        orderBy: this.state.filterColumn.orderBy,
-      },
-      updateQuery: filterUpdateQuery,
-    })
-  }
-
   handleSortByColumn = async columnName => {
-    const { filterColumn, filterName, filterDate } = this.state
+    const { filterColumn } = this.state
     await this.setState({
       filterColumn: {
         isDesc: filterColumn.name === columnName ? !filterColumn.isDesc : true,
@@ -122,11 +90,10 @@ export default class NoteList extends Component {
       },
     })
     this.props.fetchMoreNotes({
-      query: FETCH_NOTES,
+      query: GET_NOTES,
       variables: {
         first: this.props.data.length,
-        name: filterName,
-        date: filterDate,
+        name: this.state.filterName,
         cursor: null,
         orderBy: this.state.filterColumn.orderBy,
       },
@@ -135,31 +102,49 @@ export default class NoteList extends Component {
   }
 
   handleRemoveSelected = async noteIds => {
+    const { handleRemove } = this.props
     try {
-      await Promise.all(noteIds.map(id => this.props.handleRemove(id)))
+      await Promise.all(noteIds.map(id => handleRemove(id)))
     } catch (err) {
       console.error('error remove notes ', err)
     }
   }
 
+  handlePaySelected = async noteIds => {
+    const { data, handleUpdate } = this.props
+    try {
+      await Promise.all(
+        noteIds
+          .map(id => {
+            console.log(Object.assign(data.find(note => note.id === id), { ispay: true }))
+            return Object.assign(data.find(note => note.id === id), { ispay: true })
+          })
+          .map(note => handleUpdate(note))
+      )
+    } catch (err) {
+      console.error('error pay notes ', err)
+    }
+  }
+
   render() {
-    const { data, headers, count, loading } = this.props
+    const { data, count, loading, intl } = this.props
+    const { handleRemoveSelected, handlePaySelected } = this
     return (
       <section>
         <NoteToolbar
           onFilterName={this.handleFilterName}
-          onFilterDate={this.handleFilterDate}
         />
         <SmartTable
           count={count}
-          headers={headers}
+          headers={getHeaders(intl.locale)}
           data={data}
           isLoading={loading}
           tableProps={this.state.tableProps}
           headerProps={this.state.headerProps}
           bodyProps={this.state.bodyProps}
           onFetchMore={this.handleFetchMore}
-          sortByColumn={this.handleSortByColumn}
+          onSortByColumn={this.handleSortByColumn}
+          actionButtons={getAtionButtons({ handleRemoveSelected, handlePaySelected })}
         />
       </section>
     )
@@ -167,13 +152,11 @@ export default class NoteList extends Component {
 }
 
 NoteList.propTypes = {
+  handleUpdate: PropTypes.func,
   handleRemove: PropTypes.func,
-  client: PropTypes.shape({
-    query: PropTypes.func,
-  }),
+  intl: PropTypes.shape(),
   loading: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.shape()),
-  headers: PropTypes.arrayOf(PropTypes.shape()),
   fetchMoreNotes: PropTypes.func,
   refetchNotes: PropTypes.func,
   count: PropTypes.number,

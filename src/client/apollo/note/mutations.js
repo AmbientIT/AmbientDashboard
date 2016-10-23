@@ -1,38 +1,35 @@
 import { amountToFloat } from '../../lib/currency'
-import { createNoteUpdateQuery, updateNoteUpdateQuery, getRemoveNoteUpdateQuery } from './reducer'
+import { addNoteUpdateQuery, updateNoteUpdateQuery, getDeleteNoteUpdateQuery } from './reducers/updateQueries'
 
-export const createNoteMutation = ({ mutate, ownProps }) => async note => {
-  note.amount = amountToFloat(note.amount)
-  try {
-    const { data: { addNote } } = await mutate({
-      variables: Object.assign(note, {
-        owner: ownProps.loggedUser.id,
-      }),
-      updateQueries: {
-        getNotes: createNoteUpdateQuery,
-      },
-    })
-    const { changedNoteEdge: { node } } = addNote
-
-    ownProps.history.push(`/note/edit/${node.id}`)
-  } catch (err) {
-    console.error('error createNote', err)
-  }
+export const addNoteMutation = ({ mutate, ownProps }) => async note => {
+  const { data: { addNote: { changedNoteEdge: { node } } } } = await mutate({
+    variables: Object.assign(note, {
+      owner: ownProps.loggedUser.id,
+      amount: amountToFloat(note.amount),
+    }),
+    updateQueries: {
+      getNotes: addNoteUpdateQuery,
+    },
+  })
+  return node
 }
 
 export const updateNoteMutation = ({ mutate, ownProps }) => async note => {
-  note.amount = amountToFloat(note.amount)
-  try {
-    await mutate({
-      variables: Object.assign(note, ownProps.params),
-      updateQueries: {
-        getNotes: updateNoteUpdateQuery,
-      },
-    })
-    ownProps.history.push('/note')
-  } catch (err) {
-    console.error('update note error', err)
-  }
+  // console.log(note, ownProps.params)
+  // console.log(Object.assign(note, {
+  //   ...ownProps.params,
+  // }))
+  delete note.action
+  delete note.owner
+  console.log(note)
+  await mutate({
+    variables: Object.assign(note, {
+      ...ownProps.params,
+    }),
+    updateQueries: {
+      getNotes: updateNoteUpdateQuery,
+    },
+  })
 }
 
 export const deleteNoteMutation = ({ mutate }) => async id => {
@@ -40,7 +37,7 @@ export const deleteNoteMutation = ({ mutate }) => async id => {
     await mutate({
       variables: { id },
       updateQueries: {
-        getNotes: getRemoveNoteUpdateQuery(id),
+        getNotes: getDeleteNoteUpdateQuery(id),
       },
     })
   } catch (err) {

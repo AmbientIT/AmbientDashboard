@@ -13,8 +13,8 @@ const noteSchema = new Schema({
   amount: {
     type: Number,
   },
-  done: {
-    prop: Boolean,
+  ispay: {
+    type: Boolean,
   },
   currency: {
     type: String,

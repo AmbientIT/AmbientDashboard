@@ -1,9 +1,9 @@
 import React, { PropTypes, Component } from 'react'
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
-import DropDownMenu from 'material-ui/DropDownMenu'
-import MenuItem from 'material-ui/MenuItem'
+// import DropDownMenu from 'material-ui/DropDownMenu'
+// import MenuItem from 'material-ui/MenuItem'
 import TextField from 'material-ui/TextField'
-import DatePicker from 'material-ui/DatePicker'
+// import DatePicker from 'material-ui/DatePicker'
 
 export class NoteToolbar extends Component {
   state = {
@@ -28,27 +28,29 @@ export class NoteToolbar extends Component {
     })
   }
 
-  renderFilterField() {
-    const { onFilterName, onFilterDate } = this.props
-    switch (this.state.input.field) {
-      case 'date':
-        return <DatePicker hintText="Pick a date" onChange={evt => onFilterDate(evt.target.value)} />
-      case 'name':
-      default:
-        return <TextField hintText="Enter some text" onChange={evt => onFilterName(evt.target.value)} />
-    }
-  }
+  // renderFilterField() {
+  //   const { onFilterName, onFilterDate } = this.props
+  //   switch (this.state.input.field) {
+  //     case 'date':
+  //       return <DatePicker hintText="Pick a date" onChange={(evt, value) => onFilterDate(value)} />
+  //     case 'name':
+  //     default:
+  //       return <TextField hintText="Enter some text" onChange={evt => onFilterName(evt.target.value)} />
+  //   }
+  // }
 
   render() {
+    const { onFilterName } = this.props
     return (
       <Toolbar>
         <ToolbarTitle text="Notes de frais" />
         <ToolbarGroup firstChild>
-          <DropDownMenu value={this.state.input.field} onChange={this.handleFilterChange}>
+          <TextField hintText="Filter by name" onChange={evt => onFilterName(evt.target.value)} />
+          {/* <DropDownMenu value={this.state.input.field} onChange={this.handleFilterChange}>
             <MenuItem value="name" primaryText="filter by name" />
             <MenuItem value="date" primaryText="filter by date" />
           </DropDownMenu>
-          {this.renderFilterField()}
+          {this.renderFilterField()} */}
         </ToolbarGroup>
         {/* <ToolbarGroup>
           <DropDownMenu value={this.state.filter.user} onChange={this.handleUserChange}>
@@ -64,5 +66,4 @@ export class NoteToolbar extends Component {
 
 NoteToolbar.propTypes = {
   onFilterName: PropTypes.func,
-  onFilterDate: PropTypes.func,
 }

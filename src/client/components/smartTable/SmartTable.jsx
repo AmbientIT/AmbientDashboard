@@ -4,17 +4,37 @@ import FlatButton from 'material-ui/FlatButton'
 import MDSpinner from 'react-md-spinner'
 import radium from 'radium'
 import { formatTableCell } from './_lib'
-import { SmartTableHeaderColumn } from './index'
+import { SmartTableHeaderColumn, ActionButtons } from './index'
 import style from './smartTable.style'
 
 @radium()
 export class SmartTable extends Component {
+  state = { selectedRowIds: [] }
+
+  handleRowSelection = async row => {
+    const { data } = this.props
+    let selectedRowIds
+    switch (row) {
+      case 'all':
+        selectedRowIds = data.map(item => item.id)
+        break
+      case 'none':
+        // todo fix this case
+        selectedRowIds = []
+        break
+      default:
+        selectedRowIds = row.map(idx => data[idx].id)
+        break
+    }
+    await this.setState({ selectedRowIds })
+  }
+
   renderBody() {
     const { headers, data, bodyProps } = this.props
     return (
       <TableBody {...bodyProps}>
         {!!data && data.map((row, index) => (
-          <TableRow key={index}>
+          <TableRow key={index} selected={!!this.state.selectedRowIds.find(id => id === row.id)}>
             {headers.map((header, propIndex) => (
               <TableRowColumn key={propIndex}>
                 {formatTableCell(row[header.key], header.format, row)}
@@ -26,32 +46,39 @@ export class SmartTable extends Component {
     )
   }
 
+
   render() {
-    const { headers, data, headerProps, isLoading, tableProps, onFetchMore, sortByColumn } = this.props
+    const { headers, data, count, headerProps, isLoading, tableProps, onFetchMore, onSortByColumn, actionButtons } = this.props
     return (
-      <Table style={style.table} {...tableProps}>
-        <TableHeader {...headerProps}>
-          <TableRow>
-            {!!headers && headers.map((header, index) => (
-              <SmartTableHeaderColumn key={index} {...{ sortByColumn, ...header }} />
-            ))}
-          </TableRow>
-        </TableHeader>
-        {isLoading ? <MDSpinner /> : this.renderBody()}
-        <TableFooter>
-          <TableRow>
-            <TableRowColumn colSpan={headers.length}>
-              <FlatButton
-                style={style.loadMore}
-                type="button"
-                label="Load More"
-                disabled={data ? this.props.count === data.length : false}
-                onTouchTap={() => onFetchMore(data[data.length - 1].cursor)}
-              />
-            </TableRowColumn>
-          </TableRow>
-        </TableFooter>
-      </Table>
+      <section>
+        <ActionButtons buttons={actionButtons} selectedRowIds={this.state.selectedRowIds} />
+        <Table style={style.table} {...tableProps} onRowSelection={this.handleRowSelection}>
+          <TableHeader {...headerProps}>
+            <TableRow>
+              {!!headers && headers.map((header, index) => (
+                <SmartTableHeaderColumn key={index} {...{ onSortByColumn, ...header }} />
+              ))}
+            </TableRow>
+          </TableHeader>
+          {isLoading ? <MDSpinner /> : this.renderBody()}
+          <TableFooter>
+            <TableRow>
+              <TableRowColumn colSpan={headers.length - 1}>
+                <FlatButton
+                  style={style.loadMore}
+                  type="button"
+                  label="Load More"
+                  disabled={data ? this.props.count === data.length : false}
+                  onTouchTap={() => onFetchMore()}
+                />
+              </TableRowColumn>
+              <TableRowColumn>
+                {isLoading ? '' : `${data.length} / ${count}` }
+              </TableRowColumn>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </section>
     )
   }
 }
@@ -63,24 +90,8 @@ SmartTable.propTypes = {
   bodyProps: PropTypes.shape(),
   headers: PropTypes.arrayOf(PropTypes.shape()),
   data: PropTypes.arrayOf(PropTypes.shape()),
-  sortByColumn: PropTypes.func,
+  actionButtons: PropTypes.arrayOf(PropTypes.shape()),
   onFetchMore: PropTypes.func,
   isLoading: PropTypes.bool,
+  onSortByColumn: PropTypes.func,
 }
-
-
-// onRowSelection: row => {
-//   const { edges } = this.props.data.viewer.notes
-//   switch (row) {
-//     case 'all':
-//       this.selectedRows = edges.map(item => item.node.id)
-//       break
-//     case 'none':
-//       this.selectedRows = []
-//       break
-//     default:
-//       this.selectedRows = row.map(idx => edges[idx].node.id)
-//       break
-//   }
-//   this.forceUpdate()
-// },

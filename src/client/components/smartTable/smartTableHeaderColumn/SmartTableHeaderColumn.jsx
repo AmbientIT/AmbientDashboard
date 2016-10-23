@@ -8,7 +8,7 @@ import style from './smartTableHeaderColumn.style'
 export class SmartTableHeaderColumn extends Component {
 
   render() {
-    const { label, sortByColumn, sortable } = this.props
+    const { label, onSortByColumn, sortable } = this.props
     return (
       <TableHeaderColumn>
         <div style={style.rowAlign}>
@@ -16,7 +16,7 @@ export class SmartTableHeaderColumn extends Component {
           {sortable
             ? <SortIcon
               style={style.sortIcon}
-              onTouchTap={() => sortByColumn(label)}
+              onTouchTap={() => onSortByColumn(label)}
             />
             : ''
           }
@@ -28,6 +28,6 @@ export class SmartTableHeaderColumn extends Component {
 
 SmartTableHeaderColumn.propTypes = {
   label: PropTypes.string,
-  sortByColumn: PropTypes.func,
+  onSortByColumn: PropTypes.func,
   sortable: PropTypes.bool,
 }

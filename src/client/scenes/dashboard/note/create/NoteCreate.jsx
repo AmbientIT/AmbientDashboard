@@ -3,18 +3,34 @@ import { injectIntl } from 'react-intl'
 import { graphql } from 'react-apollo'
 import { connect } from 'react-redux'
 import { NoteForm } from '../../../../components'
-import { CREATE_NOTE, createNoteMutation } from '../../../../apollo'
+import { ADD_NOTE, addNoteMutation } from '../../../../apollo'
 
 @injectIntl
 @connect(
   state => state.auth ? { loggedUser: state.auth.loggedUser } : {},
 )
-@graphql(CREATE_NOTE, {
+@graphql(ADD_NOTE, {
   props: data => ({
-    createNoteHandler: createNoteMutation(data),
+    createNote: addNoteMutation(data),
   }),
 })
 export default class NoteCreate extends Component {
+  static contextTypes = {
+    router: PropTypes.shape({
+      push: PropTypes.func,
+    }),
+  }
+
+  createNoteHandler = async note => {
+    try {
+      console.log(note)
+      const createdNote = await this.props.createNote(note)
+      this.context.router.push(`/note/edit/${createdNote.id}`)
+    } catch (err) {
+      console.error('error create: ', err)
+    }
+  }
+
   render() {
     const initialValues = {
       amount: 0,
@@ -22,7 +38,7 @@ export default class NoteCreate extends Component {
     }
     return (
       <NoteForm
-        onSubmit={this.props.createNoteHandler}
+        onSubmit={this.createNoteHandler}
         initialValues={initialValues}
         locale={this.props.intl.locale}
       />
@@ -31,7 +47,7 @@ export default class NoteCreate extends Component {
 }
 
 NoteCreate.propTypes = {
-  createNoteHandler: PropTypes.func,
+  createNote: PropTypes.func,
   intl: PropTypes.shape({
     locale: PropTypes.string,
   }),

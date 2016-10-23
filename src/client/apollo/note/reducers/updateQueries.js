@@ -9,7 +9,7 @@ export const fetchMoreNotesUpdateQuery = (prev, { fetchMoreResult }) => {
   })
 }
 
-export const createNoteUpdateQuery = (prev, { mutationResult: { data: { addNote: { changedNoteEdge } } } }) => {
+export const addNoteUpdateQuery = (prev, { mutationResult: { data: { addNote: { changedNoteEdge } } } }) => {
   const { notes } = prev.viewer
   if (notes.edges.length === notes.count) {
     notes.edges = [...notes.edges, changedNoteEdge]
@@ -30,7 +30,7 @@ export const updateNoteUpdateQuery = (prev, { mutationResult: { data: { updateNo
   return prev
 }
 
-export const getRremoveNoteUpdateQuery = id => (prev, { mutationResult }) => {
+export const getDeleteNoteUpdateQuery = id => (prev, { mutationResult }) => {
   if (mutationResult.data.deleteNote.ok) {
     const { notes } = prev.viewer
     notes.count -= notes.count

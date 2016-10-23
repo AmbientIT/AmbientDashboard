@@ -8,15 +8,15 @@ import Delete from 'material-ui/svg-icons/action/delete'
 @radium()
 export class NoteActionColumn extends Component {
   render() {
-    const { handleRemove, note } = this.props
+    const { onNoteRemove, onNotePrefetch, note } = this.props
     return (
       <div>
         <Link to={`/note/edit/${note.id}`}>
-          <IconButton>
+          <IconButton onMouseEnter={() => onNotePrefetch(note.id)}>
             <ModeEdit />
           </IconButton>
         </Link>
-        <IconButton onTouchTap={() => handleRemove(note.id)}>
+        <IconButton onTouchTap={() => onNoteRemove(note.id)}>
           <Delete />
         </IconButton>
       </div>
@@ -26,5 +26,6 @@ export class NoteActionColumn extends Component {
 
 NoteActionColumn.propTypes = {
   note: PropTypes.shape(),
-  handleRemove: PropTypes.func,
+  onNoteRemove: PropTypes.func,
+  onNotePrefetch: PropTypes.func,
 }

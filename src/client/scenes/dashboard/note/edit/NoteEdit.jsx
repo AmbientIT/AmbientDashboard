@@ -5,7 +5,7 @@ import { graphql } from 'react-apollo'
 import { bindActionCreators } from 'redux'
 import { uploadAttachement } from '../../../../store/actions/attachement'
 import { NoteForm, Attachements, MyDropzone } from '../../../../components'
-import { FETCH_NOTE, UPDATE_NOTE, updateNoteMutation } from '../../../../apollo'
+import { GET_NOTE, UPDATE_NOTE, updateNoteMutation } from '../../../../apollo'
 
 @injectIntl
 @connect(
@@ -14,14 +14,25 @@ import { FETCH_NOTE, UPDATE_NOTE, updateNoteMutation } from '../../../../apollo'
 )
 @graphql(UPDATE_NOTE, {
   props: data => ({
-    updateNoteHandler: updateNoteMutation(data),
+    updateNote: updateNoteMutation(data),
   }),
 })
-@graphql(FETCH_NOTE, {
+@graphql(GET_NOTE, {
   options: ({ routeParams: { id } }) => ({ variables: { id } }),
 })
 export default class NoteEdit extends Component {
+  static contextTypes = {
+    router: PropTypes.shape({
+      push: PropTypes.func,
+    }),
+  }
+
   dropzoneLabel = 'drop some file here'
+
+  handleUpdateNote = async note => {
+    await this.props.updateNote(note)
+    this.context.router.push('/note')
+  }
 
   removeAttachementHandler = ({ id }) => {
     console.log('remove attachements', id)
@@ -36,7 +47,7 @@ export default class NoteEdit extends Component {
       <section>
         <NoteForm
           initialValues={Object.assign(this.props.data.note, { date: new Date(this.props.data.note.date) })}
-          onSubmit={this.props.updateNoteHandler}
+          onSubmit={this.handleUpdateNote}
           locale={this.props.intl.locale}
         />
         <Attachements
@@ -71,6 +82,6 @@ NoteEdit.propTypes = {
   intl: PropTypes.shape({
     locale: PropTypes.string,
   }),
-  updateNoteHandler: PropTypes.func,
+  updateNote: PropTypes.func,
   uploadHandler: PropTypes.func,
 }

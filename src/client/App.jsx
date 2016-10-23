@@ -39,6 +39,5 @@ App.propTypes = {
 }
 
 App.childContextTypes = {
-  locale: PropTypes.string.isRequired,
   _radiumConfig: PropTypes.object.isRequired,
 }

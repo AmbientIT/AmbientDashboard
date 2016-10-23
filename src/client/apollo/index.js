@@ -2,8 +2,8 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client'
 
 export * from './note/mutations'
 export * from './note/queries'
-export * from './note/reducer'
-export * from './note/updateQueries'
+export * from './note/reducers/queries'
+export * from './note/reducers/updateQueries'
 
 export default new ApolloClient({
   dataIdFromObject: o => o.id,
