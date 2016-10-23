@@ -1,4 +1,4 @@
-import { listModules } from 'awilix'
+import { listModules } from '../_core'
 
 /**
  * Resolves and creates API controllers.
@@ -6,7 +6,8 @@ import { listModules } from 'awilix'
  * @param  {KoaRouter} router
  * The router to pass to the API factories.
  */
-export default (router) => {
-  return listModules('./**/*.router.*', { cwd: __dirname })
-    .forEach(module => require(module.path).default(router))
+export default async router => {
+  const modules = await listModules(`${__dirname}/**/*.router.*`)
+  modules.forEach(module => module(router))
+  return router
 }

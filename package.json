@@ -25,8 +25,6 @@
     "@risingstack/graffiti-mongoose": "^5.2.1",
     "apollo-client": "^0.4.14",
     "apollo-server": "^0.3.2",
-    "awilix": "^2.2.1",
-    "awilix-koa": "^0.1.1",
     "babel-plugin-transform-react-jsx": "^6.8.0",
     "bristol": "^0.3.3",
     "fs-promise": "^0.5.0",

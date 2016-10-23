@@ -1,6 +1,7 @@
 import 'source-map-support/register'
 
 import Koa from 'koa'
+import Router from 'koa-router'
 import convert from 'koa-convert'
 import respond from 'koa-respond'
 import bodyParser from 'koa-bodyparser'
@@ -11,6 +12,7 @@ import {
   env,
   connectDatabase,
 } from './_core'
+import createApi from './api'
 import {
   notFoundHandler,
   webpackDevMiddleware,
@@ -44,7 +46,11 @@ export default async () => {
   app.use(bodyParser())
   app.use(serveFrontMiddleware())
   app.use(exposeLoggedUserMiddleware())
-  app.use(routerMiddleWare())
+
+  const apiRouter = new Router()
+  const router = await createApi(apiRouter)
+
+  app.use(routerMiddleWare(router))
   app.use(notFoundHandler())
 
   logger.debug('Server created, ready to listen', { scope: 'startup' })

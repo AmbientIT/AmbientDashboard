@@ -1,7 +1,7 @@
-import { listModules } from 'awilix'
-import { getSchema } from '@risingstack/graffiti-mongoose'
+import { getSchema as graffitiSchema } from '@risingstack/graffiti-mongoose'
+import { listModules } from '../_core'
 
-export const models = listModules('./mongoose/*.js', { cwd: __dirname })
-  .map(module => require(module.path).default)
-
-export const schema = getSchema(models)
+export const getSchema = async () => {
+  const models = await listModules(`${__dirname}/mongoose/*.js`)
+  return graffitiSchema(models)
+}
