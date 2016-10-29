@@ -1,6 +1,6 @@
 import jwt from 'jwt-simple'
 import createError from 'http-errors'
-import { env } from '../_core'
+import { env } from '../../_core'
 
 export const exposeLoggedUserMiddleware = () => async (ctx, next) => {
   try {
