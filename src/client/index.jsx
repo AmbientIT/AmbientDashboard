@@ -5,7 +5,6 @@ import { createHistory } from 'history'
 import { Router, useRouterHistory } from 'react-router'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import injectTapEventPlugin from 'react-tap-event-plugin'
 import { addLocaleData } from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import fr from 'react-intl/locale-data/fr'
@@ -18,8 +17,6 @@ import App from './App'
 export { configureStore, getRoutes, App }
 
 addLocaleData([...en, ...fr, ...es])
-
-injectTapEventPlugin()
 
 const browserHistory = useRouterHistory(createHistory)({
   basename: '/',

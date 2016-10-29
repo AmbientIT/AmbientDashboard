@@ -1,4 +1,4 @@
-export * from './lib/db'
+export * from './lib/connectDatabase'
 export * from './lib/logger'
 export * from './lib/listModule'
 export * from './lib/apiBlueprint'

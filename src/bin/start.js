@@ -11,7 +11,7 @@ import { env, logger } from '../server/_core'
     const app = await createServer()
     await app.listen(PORT)
     const mode = env.NODE_ENV
-    logger.debug(`Server listening on ${PORT} in ${mode} mode`)
+    logger.info(`Server listening on ${PORT} in ${mode} mode`)
   } catch (err) {
     logger.error('Error while starting up server', err)
     process.exit(1)
