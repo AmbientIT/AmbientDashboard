@@ -7,7 +7,7 @@ import Note from './dashboard/note/Note'
 import NoteList from './dashboard/note/list/NoteList'
 import NoteEdit from './dashboard/note/edit/NoteEdit'
 import NoteCreate from './dashboard/note/create/NoteCreate'
-import { forbiddenIfLoggedIn, requireAuth } from './guards'
+import { forbiddenIfLoggedIn, requireAuth } from '../lib/auth/guard'
 
 const getRoutes = ({ store, ctx }) => {
   return (

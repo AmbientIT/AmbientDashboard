@@ -49,6 +49,7 @@ export class SmartTable extends Component {
 
   render() {
     const { headers, data, count, headerProps, isLoading, tableProps, onFetchMore, onSortByColumn, actionButtons } = this.props
+    console.log(data)
     return (
       <section>
         <ActionButtons buttons={actionButtons} selectedRowIds={this.state.selectedRowIds} />

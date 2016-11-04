@@ -1,5 +1,5 @@
 import httpError from 'http-errors'
-import User from '../../models/mongoose/user'
+import { User } from '../../models'
 import { createJWT, getGoogleToken, getGoogleProfile } from '../../services/auth'
 import isAuthenticated from '../../middlewares/guards/isAuthenticated'
 
@@ -20,9 +20,9 @@ export default router => {
     }
 
     const userCount = await User.count({})
-    let user = await User.findOne({ google: profile.sub })
+    let user = await User.findOne({ where: { google: profile.sub } })
     if (!user) {
-      const newUser = new User({
+      user = await User.create({
         google: profile.sub,
         avatar: profile.picture.replace('sz=50', 'sz=200'),
         firstName: profile.given_name,
@@ -30,7 +30,6 @@ export default router => {
         email: profile.email,
         role: userCount > 0 ? 'peon' : 'admin',
       })
-      user = await newUser.save()
     }
     const token = createJWT(user)
     ctx.ok({ token, user })

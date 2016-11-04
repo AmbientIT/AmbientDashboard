@@ -2,7 +2,7 @@ import 'source-map-support/register'
 
 import Koa from 'koa'
 import Router from 'koa-router'
-import { logger, env, connectDatabase } from './_core'
+import { logger, env } from './_core'
 import { appMiddleware, devMiddleware, prodMiddleware, errorMiddleware } from './middlewares'
 
 /**
@@ -14,8 +14,8 @@ import { appMiddleware, devMiddleware, prodMiddleware, errorMiddleware } from '.
 export default async () => {
   logger.debug('Creating server...', { scope: 'startup' })
 
-  await connectDatabase(env.DB_URI)
-  logger.info(`connected to mongodb database : ${env.DB_URI}`, { scope: 'database' })
+  // await connectDatabase(env.DB_URI)
+  // logger.info(`connected to mongodb database : ${env.DB_URI}`, { scope: 'database' })
 
   const app = new Koa()
   app.use(errorMiddleware())

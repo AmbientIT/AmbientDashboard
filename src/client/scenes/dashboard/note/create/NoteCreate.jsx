@@ -1,54 +1,55 @@
 import React, { Component, PropTypes } from 'react'
+import { bindActionCreators } from 'redux'
 import { injectIntl } from 'react-intl'
-import { graphql } from 'react-apollo'
 import { connect } from 'react-redux'
 import { NoteForm } from '../../../../components'
-import { ADD_NOTE, addNoteMutation } from '../../../../apollo'
+import { note as noteActions } from '../../../../store/actions'
+import { amountToFloat } from '../../../../lib/currency'
+
+const { noteCreate } = noteActions.actions
 
 @injectIntl
 @connect(
-  state => state.auth ? { loggedUser: state.auth.loggedUser } : {},
-)
-@graphql(ADD_NOTE, {
-  props: data => ({
-    createNote: addNoteMutation(data),
+  ({ user, auth }) => ({
+    loggedUser: user.data[auth.loggedUser],
+    initialValues: {
+      amount: 0,
+      date: new Date(Date.now()),
+    },
   }),
-})
+  dispatch => bindActionCreators({
+    dispatchNoteCreate: noteCreate,
+  }, dispatch)
+)
 export default class NoteCreate extends Component {
-  static contextTypes = {
-    router: PropTypes.shape({
-      push: PropTypes.func,
-    }),
-  }
 
-  createNoteHandler = async note => {
-    try {
-      console.log(note)
-      const createdNote = await this.props.createNote(note)
-      this.context.router.push(`/note/edit/${createdNote.id}`)
-    } catch (err) {
-      console.error('error create: ', err)
-    }
+  handleSubmitForm = (note) => {
+    const { loggedUser, dispatchNoteCreate } = this.props
+    dispatchNoteCreate({
+      method: 'post',
+      body: {
+        ...note,
+        amount: amountToFloat(note.amount),
+        owner: loggedUser._id,
+      },
+    })
   }
 
   render() {
-    const initialValues = {
-      amount: 0,
-      date: new Date(Date.now()),
-    }
+    const { intl, initialValues } = this.props
     return (
       <NoteForm
-        onSubmit={this.createNoteHandler}
+        onSubmit={this.handleSubmitForm}
         initialValues={initialValues}
-        locale={this.props.intl.locale}
+        locale={intl.locale}
       />
     )
   }
 }
 
 NoteCreate.propTypes = {
-  createNote: PropTypes.func,
-  intl: PropTypes.shape({
-    locale: PropTypes.string,
-  }),
+  loggedUser: PropTypes.shape(),
+  dispatchNoteCreate: PropTypes.func,
+  intl: PropTypes.shape(),
+  initialValues: PropTypes.shape(),
 }

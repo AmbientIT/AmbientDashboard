@@ -10,6 +10,9 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), { //eslint-disable-line
       `${process.cwd()}/src/client`,
       `${process.cwd()}/node_modules`,
     ],
+    alias: {
+
+    },
   },
   module: {
     rules: [
@@ -58,7 +61,7 @@ module.exports = webpackMerge.smart(require(`./${ENV}`), { //eslint-disable-line
       'process.env': {
         NODE_ENV: `'${ENV}'`,
         CLIENT: true,
-        GRAPHQL: { HOST: `'${HOST}'`, PORT: `'${PORT}'` },
+        API: { HOST: `'${HOST}'`, PORT: `'${PORT}'` },
         GOOGLEID: `'${google.GOOGLEID}'`,
         GOOGLEREDIRECTURI: `'${google.REDIRECTURI}'`,
         GOOGLESCOPE: `'${google.SCOPE}'`,

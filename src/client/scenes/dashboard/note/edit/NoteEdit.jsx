@@ -1,62 +1,70 @@
 import React, { Component, PropTypes } from 'react'
 import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-import { graphql } from 'react-apollo'
 import { bindActionCreators } from 'redux'
+import MDSpinner from 'react-md-spinner'
 import { uploadAttachement } from '../../../../store/actions/attachement'
 import { NoteForm, Attachements, MyDropzone } from '../../../../components'
-import { GET_NOTE, UPDATE_NOTE, updateNoteMutation } from '../../../../apollo'
+import { note as noteActions } from '../../../../store/actions'
+
+const { noteFetchOne, noteUpdate } = noteActions.actions
 
 @injectIntl
 @connect(
-  state => state.auth ? { loggedUser: state.auth.loggedUser } || {} : {},
-  dispatch => bindActionCreators({ uploadHandler: uploadAttachement }, dispatch)
-)
-@graphql(UPDATE_NOTE, {
-  props: data => ({
-    updateNote: updateNoteMutation(data),
+  (state, ownProps) => ({
+    loggedUser: state.auth ? state.auth.loggedUser : {},
+    note: {
+      ...state.note.data[ownProps.params.id],
+      date: new Date(state.note.data[ownProps.params.id].date),
+    },
+    isLoading: state.note.isLoading,
   }),
-})
-@graphql(GET_NOTE, {
-  options: ({ routeParams: { id } }) => ({ variables: { id } }),
-})
+  dispatch => bindActionCreators({
+    uploadHandler: uploadAttachement,
+    fetchNote: noteFetchOne,
+    dispatchNoteUpdate: noteUpdate,
+  }, dispatch)
+)
 export default class NoteEdit extends Component {
-  static contextTypes = {
-    router: PropTypes.shape({
-      push: PropTypes.func,
-    }),
+  state = {
+    dropzoneLabel: 'drop some file here',
   }
 
-  dropzoneLabel = 'drop some file here'
+  componentDidMount() {
+    const { id } = this.props.params
+    this.props.fetchNote({
+      url: `/note/${id}`,
+    })
+  }
 
-  handleUpdateNote = async note => {
-    await this.props.updateNote(note)
-    this.context.router.push('/note')
+
+  handleUpdateNote = note => {
+    this.props.dispatchNoteUpdate({
+      method: 'put',
+      id: note._id,
+      body: note,
+    })
   }
 
   removeAttachementHandler = ({ id }) => {
     console.log('remove attachements', id)
   }
 
-  renderLoader = () => {
-    return <div>loading...</div>
-  }
-
   renderForm() {
     return (
       <section>
         <NoteForm
-          initialValues={Object.assign(this.props.data.note, { date: new Date(this.props.data.note.date) })}
+          initialValues={this.props.note}
           onSubmit={this.handleUpdateNote}
           locale={this.props.intl.locale}
         />
         <Attachements
-          count={this.props.data.note.attachements.count}
-          attachements={this.props.data.note.attachements.edges}
+          count={this.props.note.attachements.count}
+          attachements={this.props.note.attachements}
           onRemoveAttachement={this.removeAttachementHandler}
         />
         <MyDropzone
-          label={this.dropzoneLabel}
+          label={this.state.dropzoneLabel}
           onUpload={this.props.uploadHandler}
         />
       </section>
@@ -64,24 +72,22 @@ export default class NoteEdit extends Component {
   }
 
   render() {
-    return this.props.data.loading ? this.renderLoader() : this.renderForm()
+    return this.props.isLoading ? <MDSpinner /> : this.renderForm()
   }
 }
 
 NoteEdit.propTypes = {
-  data: PropTypes.shape({
-    loading: PropTypes.bool,
-    note: PropTypes.shape({
-      date: PropTypes.date,
-      attachements: PropTypes.shape({
-        count: PropTypes.number,
-        edges: PropTypes.arrayOf(PropTypes.shape()),
-      }),
-    }),
+  params: PropTypes.shape({
+    id: PropTypes.string,
   }),
+  fetchNote: PropTypes.func,
+  note: PropTypes.shape({
+    attachements: PropTypes.arrayOf(),
+  }),
+  isLoading: PropTypes.bool,
   intl: PropTypes.shape({
     locale: PropTypes.string,
   }),
-  updateNote: PropTypes.func,
+  dispatchNoteUpdate: PropTypes.func,
   uploadHandler: PropTypes.func,
 }

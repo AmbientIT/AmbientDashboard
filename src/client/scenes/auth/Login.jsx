@@ -2,11 +2,11 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import GoogleLogin from 'react-google-login'
-import { googleLogin as googleAuth } from '../../store/actions/auth'
+import { login } from '../../store/actions/auth'
 
 @connect(
   state => state.login ? { isLoading: state.login.isLoading } : {},
-  dispatch => bindActionCreators({ googleLogin: googleAuth }, dispatch)
+  dispatch => bindActionCreators({ login }, dispatch)
 )
 export default class Login extends Component {
   static contextTypes = {
@@ -17,22 +17,12 @@ export default class Login extends Component {
     console.error('error login', err)
   }
 
-  loginHandler = async ({ code }) => {
-    try {
-      const { googleLogin, clientId, redirectUri } = this.props
-      await googleLogin({ code, clientId, redirectUri })
-      this.context.router.push('/')
-    } catch (err) {
-      console.error('login error', err)
-    }
-  }
-
   render() {
     return (
       <GoogleLogin
         clientId={this.props.clientId}
         buttonText="Login"
-        onSuccess={this.loginHandler}
+        onSuccess={this.props.login}
         onFailure={this.loginFailure}
         offline
       />
@@ -41,13 +31,10 @@ export default class Login extends Component {
 }
 
 Login.propTypes = {
-  googleLogin: PropTypes.func,
+  login: PropTypes.func,
   clientId: PropTypes.string,
-  redirectUri: PropTypes.string,
 }
 
 Login.defaultProps = {
   clientId: process.env.GOOGLEID,
-  redirectUri: process.env.GOOGLEREDIRECTURI,
-  scope: process.env.GOOGLESCOPE,
 }

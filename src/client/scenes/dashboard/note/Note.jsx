@@ -1,12 +1,9 @@
 import React, { PropTypes, Component } from 'react'
-import { graphql } from 'react-apollo'
 import { Link } from 'react-router'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
-import { GET_NOTES } from '../../../apollo'
 import style from './note.style'
 
-@graphql(GET_NOTES)
 class Note extends Component {
   render() {
     const { children } = this.props

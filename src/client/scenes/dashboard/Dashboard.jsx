@@ -8,28 +8,25 @@ import AppBar from 'material-ui/AppBar'
 import { logout } from '../../store/actions/auth'
 
 @connect(
-  state => state.auth ? state.auth.loggedUser : {},
+  ({ user, auth }) => ({
+    loggedUser: user.data[auth.loggedUser],
+  }),
   dispatch => bindActionCreators({ logout }, dispatch)
 )
 export default class Dashboard extends Component {
-  static contextTypes = {
-    router: PropTypes.object,
-  }
-
   state = {
     open: false,
+    navLinks: [
+      {
+        label: 'Home',
+        path: '/',
+      },
+      {
+        label: 'Notes de frais',
+        path: '/note',
+      },
+    ],
   }
-
-  navLinks = [
-    {
-      label: 'Home',
-      path: '/',
-    },
-    {
-      label: 'Notes de frais',
-      path: '/note',
-    },
-  ]
 
   handleToggle = () => {
     this.setState({ open: !this.state.open })
@@ -37,11 +34,6 @@ export default class Dashboard extends Component {
 
   handleClose = () => {
     this.setState({ open: false })
-  }
-
-  logout = () => {
-    this.props.logout()
-    this.context.router.go('/login')
   }
 
   render() {
@@ -58,10 +50,10 @@ export default class Dashboard extends Component {
           open={this.state.open}
           onRequestChange={(open) => this.setState({ open })}
         >
-          <MenuItem onTouchTap={this.logout}>
+          <MenuItem onTouchTap={this.props.logout}>
             Logout
           </MenuItem>
-          {this.navLinks.map(nav => {
+          {this.state.navLinks.map(nav => {
             return (
               <Link to={nav.path} key={nav.label}>
                 <MenuItem onTouchTap={this.handleClose}>

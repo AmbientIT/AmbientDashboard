@@ -1,12 +1,11 @@
 import React, { PropTypes } from 'react'
 import serialize from 'serialize-javascript'
 
-const getInitialScript = ({ initialState, apolloState }) => (`
-  window.APOLLO_STATE=${serialize(apolloState)};
-  window.INITIAL_STATE=${serialize(Object.assign(initialState, apolloState))};
+const getInitialScript = ({ initialState }) => (`
+  window.INITIAL_STATE=${serialize(initialState)};
 `)
 
-const Html = ({ markup, initialState, apolloState, locale }) => (
+const Html = ({ markup, initialState, locale }) => (
   <html lang={locale}>
     <head>
       <base href="/" />
@@ -17,7 +16,7 @@ const Html = ({ markup, initialState, apolloState, locale }) => (
     </head>
     <body>
       <div id="react-container" dangerouslySetInnerHTML={{ __html: markup }} />
-      <script dangerouslySetInnerHTML={{ __html: getInitialScript({ initialState, apolloState }) }} />
+      <script dangerouslySetInnerHTML={{ __html: getInitialScript({ initialState }) }} />
       <script src="main.js" />
     </body>
   </html>
@@ -26,7 +25,6 @@ const Html = ({ markup, initialState, apolloState, locale }) => (
 
 Html.propTypes = {
   initialState: PropTypes.shape(),
-  apolloState: PropTypes.shape(),
   markup: PropTypes.string,
   locale: PropTypes.string,
 }

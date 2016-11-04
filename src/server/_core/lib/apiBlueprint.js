@@ -8,11 +8,14 @@ const defaultMiddleware = {
 
 export const generateBlueprint = (router, Model, middlewares = defaultMiddleware) => {
   router.get(`/api/${Model.modelName.toLowerCase()}`, ...middlewares.findAll, async ctx => {
-    ctx.body = await Model.find(ctx.request.query.query)
+    ctx.body = {
+      count: await Model.count(),
+      data: await Model.find(ctx.request.query.query),
+    }
   })
 
   router.get(`/api/${Model.modelName.toLowerCase()}/:id`, ...middlewares.findOne, async ctx => {
-    ctx.body = await Model.findOne({ _id: ctx.request.params.id })
+    ctx.body = await Model.findOne({ _id: ctx.params.id })
   })
 
   router.post(`/api/${Model.modelName.toLowerCase()}`, ...middlewares.create, async ctx => {
@@ -21,10 +24,11 @@ export const generateBlueprint = (router, Model, middlewares = defaultMiddleware
   })
 
   router.put(`/api/${Model.modelName.toLowerCase()}/:id`, ...middlewares.update, async ctx => {
-    ctx.body = await Model.findOneAndUpdate({ _id: ctx.request.params.id }, ctx.request.body)
+    ctx.body = await Model.findOneAndUpdate({ _id: ctx.params.id }, ctx.request.body)
   })
 
   router.delete(`/api/${Model.modelName.toLowerCase()}/:id`, ...middlewares.remove, async ctx => {
-    ctx.body = await Model.remove({ _id: ctx.request.params.id })
+    await Model.remove({ _id: ctx.params.id })
+    ctx.body = { _id: ctx.params.id }
   })
 }

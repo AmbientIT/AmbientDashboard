@@ -1,5 +1,4 @@
-import jsCookie from 'js-cookie'
-import { LOGIN_LOADING, LOGIN_FINISH, LOGIN_ERROR, LOGOUT } from '../actions/auth'
+import { LOGIN_START, LOGIN_SUCCESS, LOGIN_ERROR, LOGOUT_START, LOGOUT_ERROR, LOGOUT_SUCCESS } from '../actions/auth'
 
 const initialState = {
   isLoading: true,
@@ -8,23 +7,24 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN_FINISH :
-      if (action.payload.token) {
-        jsCookie.set('token', action.payload.token)
-        localStorage.setItem('token', action.payload.token)
+    case LOGIN_START:
+    case LOGOUT_START:
+      return {
+        ...state,
+        isLoading: true,
       }
+    case LOGIN_SUCCESS:
       return {
         isLoading: false,
-        loggedUser: Object.assign({ id: action.payload.user._id }, action.payload.user),
+        loggedUser: action.payload.data.result,
       }
-    case LOGIN_LOADING :
-      return Object.assign(state, { isLoading: true })
-    case LOGIN_ERROR :
-      return Object.assign(state, { isLoading: false })
-    case LOGOUT :
-      jsCookie.remove('token')
-      localStorage.removeItem('token')
-      return Object.assign(state, { loggedUser: null })
+    case LOGOUT_SUCCESS:
+    case LOGOUT_ERROR:
+    case LOGIN_ERROR:
+      return {
+        isLoading: false,
+        loggedUser: null,
+      }
     default :
       return state
   }

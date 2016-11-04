@@ -8,8 +8,8 @@ import koaCompress from 'koa-compress'
 import cors from 'kcors'
 
 import createApi from '../api'
-import { getModels } from '../models'
-import { generateBlueprint, logger, env } from '../_core'
+// import { getModels } from '../models'
+import { logger, env } from '../_core'
 
 import { renderingMiddleware } from './common/rendering'
 import { exposeLoggedUserMiddleware } from './common/exposeLoggedUser'
@@ -39,8 +39,8 @@ export const appMiddleware = async ({ rootRouter, api, bluePrint }) => {
     await createApi(rootRouter)
   }
   if (bluePrint) {
-    const models = await getModels()
-    models.forEach(model => generateBlueprint(rootRouter, model))
+    // const models = await getModels()
+    // models.forEach(model => generateBlueprint(rootRouter, model))
   }
   return compose([
     respond(),

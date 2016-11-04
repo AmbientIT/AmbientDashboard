@@ -11,12 +11,12 @@ export class NoteActionColumn extends Component {
     const { onNoteRemove, onNotePrefetch, note } = this.props
     return (
       <div>
-        <Link to={`/note/edit/${note.id}`}>
-          <IconButton onMouseEnter={() => onNotePrefetch(note.id)}>
+        <Link to={`/note/edit/${note._id}`}>
+          <IconButton onMouseEnter={() => onNotePrefetch({ id: note._id })}>
             <ModeEdit />
           </IconButton>
         </Link>
-        <IconButton onTouchTap={() => onNoteRemove(note.id)}>
+        <IconButton onTouchTap={() => onNoteRemove({ id: note._id, method: 'delete' })}>
           <Delete />
         </IconButton>
       </div>
